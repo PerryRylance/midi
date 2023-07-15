@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../lib/MIDI.min.js"></script>
+	</head>
+	<body>
+		<form>
+			<fieldset>
+				<input type="file"/>
+			</fieldset>
+			<fieldset>
+				<button type="button">Process</button>
+			</fieldset>
+			<fieldset>
+				<a id="result">Download Result</a>
+			</fieldset>
+		</form>
+		
+		<script>
+		
+		var input = document.querySelector("input[type='file']");
+		
+		// Load MIDI file and manipulate it
+		function process(bytes)
+		{
+			// Parse MIDI file from the ArrayBuffer
+			var stream = new MIDIStream(bytes);
+			var file = new MIDIFile();
+			
+			file.readBytes(stream);
+			
+			// Loop through tracks and events and perform some manipulation
+			for(var t = 0; t < file.tracks.length; t++) {
+				var track = file.tracks[t];
+				for(var i = 0; i < track.events.length; i++) {
+					var event = track.events[i];
+					
+					if(event instanceof MIDIControlEvent &&
+						(event.type == MIDIControlEvent.NOTE_ON || event.type == MIDIControlEvent.NOTE_OFF)
+						)
+					{
+						// Manipulate the pitch of the event. This puts all note events into the whole tone scale
+						event.param1 = event.param1 - (event.param1 % 2);
+					}
+				}
+			}
+			
+			stream = new MIDIStream();
+			file.writeBytes(stream);
+			
+			var url = stream.toDataURL();
+			document.querySelector("#result").href = url;
+		}
+		
+		// Listen for user to input file and click process
+		document.
+			querySelector("button").
+			addEventListener("click", function() {
+				
+				var file = input.files[0];
+				
+				if(!file)
+				{
+					alert("No file selected");
+					return;
+				}
+				
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					var bytes = reader.result;
+					process(bytes);
+				};
+				
+				reader.readAsArrayBuffer(file);
+				
+			});
+		
+		</script>
+	</body>
+</html>
