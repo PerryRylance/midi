@@ -39,6 +39,16 @@ import ReadStream from "./streams/ReadStream";
 import Stream from "./streams/Stream";
 import WriteStream from "./streams/WriteStream";
 
+import { Format } from "./File";
+import { EventType } from "./events/Event";
+import { ControlEventType } from "./events/control/ControlEvent";
+import { ControllerType } from "./events/control/ControllerEvent";
+import { ProgramType } from "./events/control/ProgramChangeEvent";
+import { Quality } from "./events/meta/KeySignatureEvent";
+import { MetaEventType } from "./events/meta/MetaEvent";
+import { Rate } from "./events/meta/SmtpeOffsetEvent";
+import { UniversalDevices } from "./events/sysex/SysExEvent";
+
 export {
 	DeviceManufacturer,
 	File,
@@ -79,5 +89,14 @@ export {
 	UnsupportedTrackError,
 	ReadStream,
 	Stream,
-	WriteStream
+	WriteStream,
+	Format,
+	EventType,
+	ControlEventType,
+	ControllerType,
+	ProgramType,
+	Quality,
+	MetaEventType,
+	Rate,
+	UniversalDevices
 };

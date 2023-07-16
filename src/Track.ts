@@ -7,6 +7,7 @@ import EventFactory from "./events/factories/EventFactory";
 import EndOfTrackEvent from "./events/meta/EndOfTrackEvent";
 import ControlEvent from "./events/control/ControlEvent";
 import UnsupportedTrackError from "./exceptions/UnsupportedTrackError";
+import TrackValidator from "./validators/TrackValidator";
 
 const MTrk		= 0x4D54726B;
 
@@ -53,6 +54,8 @@ export default class Track
 
 	writeBytes(stream: WriteStream)
 	{
+		const validator = new TrackValidator(this);
+
 		stream.writeUint(MTrk);
 
 		const chunkSizePosition = stream.getPosition();
@@ -61,8 +64,12 @@ export default class Track
 
 		const status: StatusBytes = [0, 0];
 
-		for(const event of this.events)
+		for(let i = 0; i < this.events.length; i++)
 		{
+			const event = this.events[i];
+
+			validator.validateEvent(event, i);
+
 			event.writeBytes(stream, status);
 
 			if(!(event instanceof ControlEvent))
@@ -71,6 +78,8 @@ export default class Track
 		
 		const trackEndPosition = stream.getPosition();
 		const chunkSize = trackEndPosition - chunkSizePosition - 4; // NB: Delta bytes minus the 4 bytes for the chunk size uint itself
+
+		validator.validateSize(chunkSize);
 
 		stream.seekTo(chunkSizePosition);
 		stream.writeUint(chunkSize);

@@ -5,7 +5,7 @@ import WriteStream from "./streams/WriteStream";
 
 const MThd = 0x4D546864;
 
-enum Format {
+export enum Format {
 	TYPE_0	= 0,
 	TYPE_1	= 1,
 	TYPE_2	= 2

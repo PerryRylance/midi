@@ -3,7 +3,7 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import Event, { EventType } from "../Event";
 
-enum UniversalDevices {
+export enum UniversalDevices {
 	NON_REAL_TIME	= 0x7E,
 	REAL_TIME		= 0x7F
 };
