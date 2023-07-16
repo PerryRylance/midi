@@ -2,6 +2,7 @@ import ReadStream from "./streams/ReadStream";
 import Track from "./Track";
 import ParseError from "./exceptions/ParseError";
 import WriteStream from "./streams/WriteStream";
+import FileValidator from "./validators/FileValidator";
 
 const MThd = 0x4D546864;
 
@@ -14,8 +15,8 @@ export enum Format {
 export default class File
 {
 	tracks: Track[] = [];
+	format: Format = Format.TYPE_1;
 	
-	private format: Format = 0;
 	private timeDivision: number = 480; // TODO: Support PPQ and FPS
 
 	private readHeader(stream: ReadStream): number
@@ -59,14 +60,24 @@ export default class File
 
 	writeBytes(stream: WriteStream)
 	{
+		const validator = new FileValidator(this);
+
 		stream.writeUint(MThd);
 		stream.writeUint(0x6); // NB: Size of the following header
+
+		validator.validateTrackCount();
 
 		stream.writeShort(this.format);
 		stream.writeShort(this.tracks.length);
 		stream.writeShort(this.timeDivision);
 
-		for(const track of this.tracks)
+		for(let i = 0; i < this.tracks.length; i++)
+		{
+			const track = this.tracks[i];
+
+			validator.validateTrack(track, i);
+
 			track.writeBytes(stream);
+		}
 	}
 }

@@ -5,6 +5,7 @@ import ParseControlEventError from "../src/exceptions/ParseControlEventError";
 import ParseError from "../src/exceptions/ParseError";
 import WriteStream from "../src/streams/WriteStream";
 import UnsupportedTrackError from "../src/exceptions/UnsupportedTrackError";
+import ValidationError from "../src/exceptions/ValidationError";
 
 const files = globSync("./tests/files/*.mid");
 
@@ -34,19 +35,28 @@ for(const file of files)
 		const stream	= new ReadStream(arrayBuffer);
 		const midi		= new File();
 
+		const read		= () => midi.readBytes(stream);
+
 		if(/illegal/.test(file))
-			expect(() => midi.readBytes(stream)).toThrow(ParseControlEventError);
+			expect(read).toThrow(ParseControlEventError);
 		else if(/corrupt/.test(file))
-			expect(() => midi.readBytes(stream)).toThrow(ParseError);
+			expect(read).toThrow(ParseError);
 		else if(/non-midi-track/.test(file))
-			expect(() => midi.readBytes(stream)).toThrow(UnsupportedTrackError);
+			expect(read).toThrow(UnsupportedTrackError);
 		else
 		{
 			midi.readBytes(stream);
 
-			const writeback = writebackToUint8Array(midi);
+			const writeback = () => {
+				const result = writebackToUint8Array(midi);
+				expect(result.byteLength).toBe(view.byteLength);
+			};
 
-			expect(writeback.byteLength).toBe(view.byteLength);
+			if(/test-2-tracks-type-0/.test(file))
+				expect(writeback).toThrow(ValidationError);
+			else
+				writeback();
+			
 		}
 
 	});

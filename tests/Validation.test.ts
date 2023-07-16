@@ -1,3 +1,4 @@
+import File, { Format } from "../src/File";
 import Track from "../src/Track";
 import NoteOnEvent from "../src/events/control/NoteOnEvent";
 import CopyrightEvent from "../src/events/meta/CopyrightEvent";
@@ -74,3 +75,54 @@ test("Validation fails on missing end of track event", () => {
 test("Copyright event cannot have non-zero absolute time", () => testEventHasZeroAbsoluteTime(CopyrightEvent));
 test("Sequence number event cannot have non-zero absolute time", () => testEventHasZeroAbsoluteTime(SequenceNumberEvent));
 test("Track name event cannot have non-zero absolute time", () => testEventHasZeroAbsoluteTime(TrackNameEvent));
+
+test("Cannot exceed maximum number of tracks", () => {
+
+	const stream	= new WriteStream();
+	const file		= new File();
+
+	for(let i = 0; i <= 0xFFFF; i++)
+		file.tracks.push(new Track());
+	
+	expect(() => {
+		file.writeBytes(stream);
+	})
+		.toThrow(ValidationError);
+
+});
+
+test("Type 0 MIDI must not have more than one track", () => {
+
+	const stream	= new WriteStream();
+	const file		= new File();
+
+	file.format		= Format.TYPE_0;
+
+	for(let i = 0; i < 2; i++)
+		file.tracks.push(new Track());
+
+	expect(() => {
+		file.writeBytes(stream);
+	})
+		.toThrow(ValidationError);
+
+});
+
+test("Copyright event cannot occur after first track", () => {
+
+	const stream	= new WriteStream();
+	const file		= new File();
+
+	for(let i = 0; i < 2; i++)
+		file.tracks.push(new Track());
+	
+	const event		= new CopyrightEvent();
+
+	file.tracks[1].events.push(event);
+
+	expect(() => {
+		file.writeBytes(stream);
+	})
+		.toThrow(ValidationError);
+
+});

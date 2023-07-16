@@ -5,6 +5,7 @@ import EventFactory from "../src/events/factories/EventFactory";
 import NoteOnEvent from "../src/events/control/NoteOnEvent";
 import Track from "../src/Track";
 import WriteStream from "../src/streams/WriteStream";
+import EndOfTrackEvent from "../src/events/meta/EndOfTrackEvent";
 
 test("Parse C Major triad with running status", () => {
 
@@ -50,6 +51,9 @@ test("Serialize C Major triad has running status", () => {
 
 		track.events.push(event);
 	}
+
+	// NB: End of track event, to pass validation. Running status is a concept of Track, so this makes sense to have in the test
+	track.events.push(new EndOfTrackEvent()); 
 
 	track.writeBytes(stream);
 
