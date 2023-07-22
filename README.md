@@ -3,6 +3,9 @@ TypeScript library for parsing, building, serializing and debugging MIDI.
 
 There are many JS / TS MIDI parsers online, this library is unique in that not only parses MIDI, it also allows you to construct MIDI from scratch, or alter existing MIDI, in a type-safe and strict fashion. This library will let you programatically build MIDI files and guide you along the way without allowing you to write invalid data. Almost no knowledge of the MIDI spec is required, simply install and start using the library.
 
+## Examples
+- The [Microtonal cyclic polyrhythm generator](https://github.com/PerryRylance/microtonal-cyclic-polyrhythm-generator) demonstrates generating MIDI and extending this libraries modules.
+
 ## Usage
 
 ### Reading MIDI data
