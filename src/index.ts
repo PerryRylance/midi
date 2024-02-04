@@ -48,6 +48,7 @@ import { Quality } from "./events/meta/KeySignatureEvent";
 import { MetaEventType } from "./events/meta/MetaEvent";
 import { FrameRate } from "./FrameRate";
 import { UniversalDevices } from "./events/sysex/SysExEvent";
+import Resolution, { ResolutionUnits } from "./Resolution";
 
 export {
 	DeviceManufacturer,
@@ -99,5 +100,7 @@ export {
 	MetaEventType,
 	FrameRate,
 	FrameRate as Rate, // NB: Compatibility with < 1.0.3
-	UniversalDevices
+	UniversalDevices,
+	Resolution,
+	ResolutionUnits
 };
