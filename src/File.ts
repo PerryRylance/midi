@@ -3,6 +3,7 @@ import Track from "./Track";
 import ParseError from "./exceptions/ParseError";
 import WriteStream from "./streams/WriteStream";
 import FileValidator from "./validators/FileValidator";
+import Resolution from "./Resolution";
 
 const MThd = 0x4D546864;
 
@@ -16,8 +17,7 @@ export default class File
 {
 	tracks: Track[] = [];
 	format: Format = Format.TYPE_1;
-	
-	private timeDivision: number = 480; // TODO: Support PPQ and FPS
+	resolution: Resolution = new Resolution();
 
 	private readHeader(stream: ReadStream): number
 	{
@@ -35,7 +35,7 @@ export default class File
 
 		const numTracks		= stream.readShort();
 
-		this.timeDivision	= stream.readShort();
+		this.resolution.readBytes(stream);
 
 		return numTracks;
 	}
@@ -69,7 +69,8 @@ export default class File
 
 		stream.writeShort(this.format);
 		stream.writeShort(this.tracks.length);
-		stream.writeShort(this.timeDivision);
+		
+		this.resolution.writeBytes(stream);
 
 		for(let i = 0; i < this.tracks.length; i++)
 		{

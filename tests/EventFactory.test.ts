@@ -10,7 +10,7 @@ import LyricEvent from "../src/events/meta/LyricEvent";
 import MarkerEvent from "../src/events/meta/MarkerEvent";
 import CuePointEvent from "../src/events/meta/CuePointEvent";
 import SetTempoEvent from "../src/events/meta/SetTempoEvent";
-import SmtpeOffsetEvent, { Rate } from "../src/events/meta/SmtpeOffsetEvent";
+import SmtpeOffsetEvent from "../src/events/meta/SmtpeOffsetEvent";
 import SequenceNumberEvent from "../src/events/meta/SequenceNumberEvent";
 import EndOfTrackEvent from "../src/events/meta/EndOfTrackEvent";
 import ChannelPrefixEvent from "../src/events/meta/ChannelPrefixEvent";
@@ -26,6 +26,7 @@ import ControllerEvent, { ControllerType } from "../src/events/control/Controlle
 import ProgramChangeEvent, { ProgramType } from "../src/events/control/ProgramChangeEvent";
 import ChannelAftertouchEvent from "../src/events/control/ChannelAftertouchEvent";
 import PitchWheelEvent from "../src/events/control/PitchWheelEvent";
+import { FrameRate } from "../src/FrameRate";
 
 import { getReadStreamFromBytes } from "./ReadStreamUtils";
 import KeySignatureEvent, { Quality } from "../src/events/meta/KeySignatureEvent";
@@ -121,7 +122,7 @@ test("Read SMTPE offset event", () => {
 	const event = getEventFromByteArray<SmtpeOffsetEvent>(EventByteArrays.SMTPE_OFFSET);
 
 	expect(event).toBeInstanceOf(SmtpeOffsetEvent);
-	expect(event.rate).toBe(Rate.FPS_24);
+	expect(event.rate).toBe(FrameRate.FPS_24);
 	expect(event.hours).toBe(1);
 	expect(event.minutes).toBe(0);
 	expect(event.seconds).toBe(0);

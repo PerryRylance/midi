@@ -19,13 +19,14 @@ import PortPrefixEvent from "../src/events/meta/PortPrefixEvent";
 import SequenceNumberEvent from "../src/events/meta/SequenceNumberEvent";
 import SequencerSpecificEvent from "../src/events/meta/SequencerSpecificEvent";
 import SetTempoEvent from "../src/events/meta/SetTempoEvent";
-import SmtpeOffsetEvent, { Rate } from "../src/events/meta/SmtpeOffsetEvent";
+import SmtpeOffsetEvent from "../src/events/meta/SmtpeOffsetEvent";
 import TextEvent from "../src/events/meta/TextEvent";
 import TimeSignatureEvent from "../src/events/meta/TimeSignatureEvent";
 import TrackNameEvent from "../src/events/meta/TrackNameEvent";
 import SysExEvent from "../src/events/sysex/SysExEvent";
 import WriteStream from "../src/streams/WriteStream";
 import ByteArrays from "./EventByteArrays";
+import { FrameRate } from "../src/FrameRate";
 
 const getUint8ArrayFromEvent = (event: Event) =>
 {
@@ -125,7 +126,7 @@ test("Serialize set tempo event", () => {
 test("Serialize SMTPE offset event", () => {
 
 	const event = new SmtpeOffsetEvent();
-	event.rate = Rate.FPS_24;
+	event.rate = FrameRate.FPS_24;
 	event.hours = 1;
 	event.minutes = 
 		event.seconds = 

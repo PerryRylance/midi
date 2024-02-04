@@ -46,7 +46,7 @@ import { ControllerType } from "./events/control/ControllerEvent";
 import { ProgramType } from "./events/control/ProgramChangeEvent";
 import { Quality } from "./events/meta/KeySignatureEvent";
 import { MetaEventType } from "./events/meta/MetaEvent";
-import { Rate } from "./events/meta/SmtpeOffsetEvent";
+import { FrameRate } from "./FrameRate";
 import { UniversalDevices } from "./events/sysex/SysExEvent";
 
 export {
@@ -97,6 +97,7 @@ export {
 	ProgramType,
 	Quality,
 	MetaEventType,
-	Rate,
+	FrameRate,
+	FrameRate as Rate, // NB: Compatibility with < 1.0.3
 	UniversalDevices
 };

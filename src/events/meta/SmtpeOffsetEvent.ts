@@ -3,17 +3,11 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
-
-export enum Rate {
-	FPS_24		= 0x0,
-	FPS_25		= 0x1,
-	FPS_DROP_30	= 0x2,
-	FPS_30		= 0x3
-};
+import { FrameRate } from "../../FrameRate";
 
 export default class SmtpeOffsetEvent extends MetaEvent
 {
-	rate: Rate = Rate.FPS_24;
+	rate: number = FrameRate.FPS_24;
 	hours: number = 1;
 	minutes: number = 0;
 	seconds: number = 0;
@@ -38,17 +32,8 @@ export default class SmtpeOffsetEvent extends MetaEvent
 		this.hours = byte & 0x1F;
 
 		// TOOD: Remove this once we have parameter handling..
-		switch(this.rate)
-		{
-			case Rate.FPS_24:
-			case Rate.FPS_25:
-			case Rate.FPS_DROP_30:
-			case Rate.FPS_30:
-				break;
-			
-			default:
-				throw new ParseError(stream, "Invalid SMTPE rate");
-		}
+		if(!(this.rate in FrameRate))
+			throw new ParseError(stream, "Invalid SMTPE rate");
 
 		this.minutes	= stream.readByte();
 		this.seconds	= stream.readByte();
