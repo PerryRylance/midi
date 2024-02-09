@@ -45,7 +45,7 @@ const doesOutputMatchByteArray = (event: Event, expected: number[]) =>
 		return false;
 	
 	for(let i = 0; i < expected.length; i++)
-		if(output[i] !== expected[i])
+		if(output[(i as unknown) as keyof ArrayBuffer] !== expected[i])
 			return false;
 
 	return true;

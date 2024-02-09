@@ -17,6 +17,15 @@ export default class WriteStream extends Stream
 		this.position++;
 	}
 
+	writeSignedByte(value: number)
+	{
+		if(value < -128 || value > 127)
+			throw new RangeError("Signed byte out of range");
+
+		this.buffer[this.position] = value < 0 ? 0xFF + value : value;
+		this.position++;
+	}
+
 	writeShort(value: number)
 	{
 		this.buffer[this.position] = (value & 0xFF00) >> 8;

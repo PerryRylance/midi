@@ -1,7 +1,7 @@
 import ReadStream from "../src/streams/ReadStream";
 import File from "../src/File";
 
-const getBufferFromValue = value => {
+const getBufferFromValue = (value: number) => {
 
 	let bytes;
 
@@ -11,14 +11,27 @@ const getBufferFromValue = value => {
 		bytes = 2;
 	else if(value <= 0xFFFFFFFF)
 		bytes = 4;
+	else
+		throw new RangeError("Value overflow");
 	
 	const bits = bytes * 8;
-	const func = `setUint${bits}`;
-
 	const buffer = new ArrayBuffer(bytes);
 	const view = new DataView(buffer);
 
-	view[func](0, value);
+	switch(bytes)
+	{
+		case 1:
+			view.setUint8(0, value);
+			break;
+		
+		case 2:
+			view.setUint16(0, value);
+			break;
+		
+		case 4:
+			view.setUint32(0, value);
+			break;
+	}
 
 	return buffer;
 

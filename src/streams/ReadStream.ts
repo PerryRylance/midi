@@ -27,6 +27,16 @@ export default class ReadStream extends Stream
 		return result;
 	}
 
+	readSignedByte()
+	{
+		if(this.position >= this.dataView.byteLength)
+			throw new ParseError(this, "Unexpected end of stream");
+
+		const result = this.dataView!.getInt8(this.position);
+		this.position++;
+		return result;
+	}
+
 	readShort()
 	{
 		if(this.position >= this.dataView.byteLength - 1)

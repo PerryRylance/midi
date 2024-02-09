@@ -1,5 +1,6 @@
 import File, { Format } from "../src/File";
 import Track from "../src/Track";
+import Event from "../src/events/Event";
 import NoteOnEvent from "../src/events/control/NoteOnEvent";
 import CopyrightEvent from "../src/events/meta/CopyrightEvent";
 import EndOfTrackEvent from "../src/events/meta/EndOfTrackEvent";
@@ -8,7 +9,7 @@ import TrackNameEvent from "../src/events/meta/TrackNameEvent";
 import ValidationError from "../src/exceptions/ValidationError";
 import WriteStream from "../src/streams/WriteStream";
 
-const pushCMajorScale = track => {
+const pushCMajorScale = (track: Track) => {
 
 	const keys = [60, 62, 64, 65, 67, 69, 71, 72];
 	const delta = 480;
@@ -23,7 +24,7 @@ const pushCMajorScale = track => {
 
 };
 
-const testEventHasZeroAbsoluteTime = (constructor) => {
+const testEventHasZeroAbsoluteTime = (constructor: (typeof CopyrightEvent | typeof SequenceNumberEvent | typeof TrackNameEvent)) => {
 
 	const stream		= new WriteStream();
 	const track			= new Track();

@@ -19,7 +19,7 @@ export default class KeySignatureEvent extends MetaEvent
 	{
 		this.assertByteLength(stream, stream.readByte(), 2);
 
-		this.accidentals = stream.readByte();
+		this.accidentals = stream.readSignedByte();
 		this.quality = stream.readByte();
 	}
 
@@ -29,7 +29,7 @@ export default class KeySignatureEvent extends MetaEvent
 
 		stream.writeByte(2);
 
-		stream.writeByte(this.accidentals);
+		stream.writeSignedByte(this.accidentals);
 		stream.writeByte(this.quality);
 	}
 
@@ -48,9 +48,6 @@ export default class KeySignatureEvent extends MetaEvent
 		if(value < -7 || value > 7)
 			throw new RangeError("Key signature accidentals out of range");
 		
-		if(value >= 0)
-			this._accidentals = value;
-		else
-			this._accidentals = 0xFF + value;
+		this._accidentals = value;
 	}
 }

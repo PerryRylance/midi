@@ -16,7 +16,19 @@ const getValueFromBuffer = (buffer: ArrayBuffer, bytes: number) => {
 	const bits = bytes * 8;
 	const view = new DataView(buffer);
 
-	return view[`getUint${bits}`](0);
+	switch(bytes)
+	{
+		case 1:
+			return view.getUint8(0);
+
+		case 2:
+			return view.getUint16(0);
+
+		case 4:
+			return view.getUint32(0);
+	}
+
+	throw new Error("Unexpected state");
 
 };
 

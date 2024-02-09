@@ -1,4 +1,5 @@
 import { globSync } from "glob";
+import { writeFileSync } from "fs";
 import ReadStream from "../src/streams/ReadStream";
 import File from "../src/File";
 import ParseControlEventError from "../src/exceptions/ParseControlEventError";
@@ -49,7 +50,7 @@ for(const file of files)
 
 			const writeback = () => {
 				const result = writebackToUint8Array(midi);
-				expect(result.byteLength).toBe(view.byteLength);
+				expect(result).toStrictEqual(view);
 			};
 
 			if(/test-2-tracks-type-0/.test(file))
