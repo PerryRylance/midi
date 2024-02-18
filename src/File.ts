@@ -19,6 +19,31 @@ export default class File
 	format: Format = Format.TYPE_1;
 	resolution: Resolution = new Resolution();
 
+	static fromArrayBuffer(data: ArrayBuffer): File
+	{
+		const file = new File();
+		const stream = new ReadStream(data);
+
+		file.readBytes(stream);
+
+		return file;
+	}
+
+	static fromBinaryString(data: string): File
+	{
+		const bytes = new Uint8Array(data.length);
+
+		for(let i = 0; i < bytes.length; i++)
+			bytes[i] = data.charCodeAt(i);
+		
+		return File.fromArrayBuffer(bytes.buffer);
+	}
+
+	static fromBase64(data: string): File
+	{
+		return File.fromBinaryString(atob(data));
+	}
+
 	private readHeader(stream: ReadStream): number
 	{
 		const signature = stream.readUint();
