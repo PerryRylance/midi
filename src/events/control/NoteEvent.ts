@@ -2,6 +2,7 @@ import ControlEvent from "./ControlEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import { StatusBytes } from "../../streams/StatusBytes";
+import { EventWriteOptions } from "../Event";
 
 export default abstract class NoteEvent extends ControlEvent
 {
@@ -38,9 +39,9 @@ export default abstract class NoteEvent extends ControlEvent
 		this.velocity = stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream, status?: StatusBytes): void
+	writeBytes(stream: WriteStream, status?: StatusBytes, options?: EventWriteOptions): void
 	{
-		super.writeBytes(stream, status);
+		super.writeBytes(stream, status, options);
 
 		stream.writeByte(this.key);
 		stream.writeByte(this.velocity);

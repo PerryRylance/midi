@@ -3,6 +3,7 @@ import ControlEvent, { ControlEventType } from "./ControlEvent";
 import ParseError from "../../exceptions/ParseError";
 import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
+import { EventWriteOptions } from "../Event";
 
 export default class PitchWheelEvent extends ControlEvent
 {
@@ -19,9 +20,9 @@ export default class PitchWheelEvent extends ControlEvent
 		this.value = ((second & 0x7F) << 7) | (first & 0x7F);
 	}
 
-	writeBytes(stream: WriteStream, status?: StatusBytes): void
+	writeBytes(stream: WriteStream, status?: StatusBytes, options?: EventWriteOptions): void
 	{
-		super.writeBytes(stream, status);
+		super.writeBytes(stream, status, options);
 
 		// NB: Internal		..012345 6789ABCD
 		// NB: Serialized	.789ABCD .0123456

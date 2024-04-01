@@ -1,6 +1,7 @@
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
+import { EventWriteOptions } from "../Event";
 
 export default class TimeSignatureEvent extends MetaEvent
 {
@@ -75,9 +76,9 @@ export default class TimeSignatureEvent extends MetaEvent
 		this.num32ndNotesPerBeat = stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream): void
+	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
 	{
-		super.writeBytes(stream);
+		super.writeBytes(stream, status, options);
 
 		stream.writeByte(4);
 

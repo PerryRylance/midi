@@ -8,6 +8,11 @@ export enum EventType {
 	META = 0xFF
 };
 
+export interface EventWriteOptions
+{
+	omitDelta?: boolean;
+}
+
 export default abstract class Event
 {
 	private _delta: number = 0;
@@ -32,9 +37,11 @@ export default abstract class Event
 		this._delta = value;
 	}
 	
-	writeBytes(stream: WriteStream, status?: StatusBytes): void
+	writeBytes(stream: WriteStream, status?: StatusBytes, options?: EventWriteOptions): void
 	{
-		stream.writeVLV(this.delta);
+		if(!options?.omitDelta)
+			stream.writeVLV(this.delta);
+
 		this.writeType(stream, status);
 	}
 
