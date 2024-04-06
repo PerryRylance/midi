@@ -4,7 +4,6 @@ import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import { FrameRate } from "../../FrameRate";
-import { EventWriteOptions } from "../Event";
 
 export default class SmtpeOffsetEvent extends MetaEvent
 {
@@ -42,9 +41,9 @@ export default class SmtpeOffsetEvent extends MetaEvent
 		this.subframes	= stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(5);
 

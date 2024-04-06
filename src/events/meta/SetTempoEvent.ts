@@ -1,7 +1,6 @@
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 
 const MICROSECONDS_PER_MINUTE = 60000000.0;
@@ -39,9 +38,9 @@ export default class SetTempoEvent extends MetaEvent
 		this.mspqn = (a << 16) | (b << 8) | c;
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(3);
 

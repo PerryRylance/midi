@@ -1,7 +1,5 @@
 import ReadStream from "../../streams/ReadStream";
-import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 
@@ -28,9 +26,9 @@ export default class PortPrefixEvent extends MetaEvent
 		this._port = value;
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(1);
 

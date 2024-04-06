@@ -1,6 +1,5 @@
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 
@@ -28,9 +27,9 @@ export default class TextEvent extends MetaEvent
 			this.text += String.fromCharCode(stream.readByte());
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(this.text.length);
 

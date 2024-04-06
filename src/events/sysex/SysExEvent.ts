@@ -1,7 +1,7 @@
 import DeviceManufacturer from "../../DeviceManufacturer";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import Event, { EventType, EventWriteOptions } from "../Event";
+import Event, { EventType } from "../Event";
 
 export enum UniversalDevices {
 	NON_REAL_TIME	= 0x7E,
@@ -28,9 +28,9 @@ export default class SysExEvent extends Event
 		this.bytes = new Uint8Array(buffer);
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(this.manufacturer);
 

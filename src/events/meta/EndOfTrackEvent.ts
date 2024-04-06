@@ -1,6 +1,5 @@
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 
@@ -11,9 +10,9 @@ export default class EndOfTrackEvent extends MetaEvent
 		this.assertByteLength(stream, stream.readByte(), 0);
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, undefined, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(0);
 	}

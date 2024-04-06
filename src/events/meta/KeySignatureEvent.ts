@@ -1,6 +1,5 @@
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 
@@ -24,9 +23,9 @@ export default class KeySignatureEvent extends MetaEvent
 		this.quality = stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, undefined, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(2);
 

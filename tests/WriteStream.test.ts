@@ -1,6 +1,4 @@
 import WriteStream from "../src/streams/WriteStream";
-import NoteOnEvent from "../src/events/control/NoteOnEvent";
-import ByteArrays from "./EventByteArrays";
 
 const getValueFromBuffer = (buffer: ArrayBuffer, bytes: number) => {
 
@@ -101,23 +99,5 @@ test("Writes Data URL", () => {
 	const dataUrl = stream.toDataURL();
 
 	expect(dataUrl).toBe("data:audio/midi;base64,/u2+7w==");
-
-});
-
-test("Writes event without delta", () => {
-
-	const event = new NoteOnEvent();
-
-	event.channel = 2;
-	event.key = 61;
-	event.velocity = 120;
-
-	const stream = new WriteStream();
-	
-	event.writeBytes(stream, undefined, {omitDelta: true});
-
-	const buffer = Array.from(new Uint8Array(stream.toArrayBuffer()));
-
-	expect(buffer).toStrictEqual(ByteArrays.NOTE_ON.slice(1, 4));
 
 });

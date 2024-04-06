@@ -1,6 +1,5 @@
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 
@@ -27,9 +26,9 @@ export default class ChannelPrefixEvent extends MetaEvent
 		this.channel = stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(1);
 

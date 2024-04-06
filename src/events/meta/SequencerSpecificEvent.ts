@@ -2,7 +2,6 @@ import ReadStream from "../../streams/ReadStream";
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import DeviceManufacturer from "../../DeviceManufacturer";
 import WriteStream from "../../streams/WriteStream";
-import { EventWriteOptions } from "../Event";
 
 export default class SequencerSpecificEvent extends MetaEvent
 {
@@ -20,9 +19,9 @@ export default class SequencerSpecificEvent extends MetaEvent
 			this.bytes[i] = stream.readByte();
 	}
 
-	writeBytes(stream: WriteStream, status?: undefined, options?: EventWriteOptions): void
+	writeBytes(stream: WriteStream): void
 	{
-		super.writeBytes(stream, status, options);
+		super.writeBytes(stream);
 
 		stream.writeByte(this.bytes.length + 1); // NB: Add 1 for manufacturer
 
