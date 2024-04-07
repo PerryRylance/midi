@@ -46,7 +46,7 @@ Run `npm run dev` during development to see TypeScript errors.
 ## Testing
 Run `npm run test` to run the entire test suite.
 
-To run individual tests, run `node node_modules/jest/bin/jest.js -i /tests/FileLibrary.test.ts -t "Reads tests\\files\\test-illegal-message-fe.mid"` replacing the argument for `-t` with the name of the test you wish to run.
+To run individual tests, run `npm run test -- -i ./tests/FileLibrary.test.ts -t "Reads tests\\files\\test-illegal-message-fe.mid"` replacing the argument for `-t` with the name of the test you wish to run.
 
 ## Credits
 - With thanks to [Recording Blogs](https://www.recordingblogs.com/wiki/musical-instrument-digital-interface-midi), [Teragon Audio](http://midi.teragonaudio.com/tech/midispec/run.htm) and [Mido](https://mido.readthedocs.io/en/latest/meta_message_types.html) for insight into the MIDI spec.
