@@ -34,7 +34,8 @@ export default abstract class Event
 	
 	writeBytes(stream: WriteStream, status?: StatusBytes): void
 	{
-		stream.writeVLV(this.delta);
+		// NB: Delta is stored on events but written by tracks. This allows events to be sent in real time (real time devices do not support delta)
+
 		this.writeType(stream, status);
 	}
 

@@ -27,6 +27,17 @@ There are many JS / TS MIDI parsers online, this library is unique in that not o
 - You can use `toArrayBuffer` from the `WriteStream` then do whatever you need
 - `toDataURL` is also provided for convenience
 
+## Version overview
+### 1.1.*
+This library was originally conceived to work purely with files and not with real-time streams. 1.1.0 introduces some changes that make working with real-time streams easier. MIDI delta time is a concept that relates strictly to files with tracks, as opposed to real-time streams do not use delta time on events at all - we simply need to send events down the stream and timing is left entirely up to the device sending.
+
+With that in mind, 1.1.0 introduces some changes to the internal implementation of how streams read and write events. Delta time is now read and written by the track, during read operations this is then passed down to the event factory. This means that we can now work with pure events in the context of a stream without having to worry about workarounds to remove delta time.
+
+This should not break any projects that use this library, but may break projects that extend our classes or depend on the implementation handling delta time at an event level.
+
+### 1.0.*
+Initial release.
+
 ## Development
 Clone this repository and run `npm install`.
 

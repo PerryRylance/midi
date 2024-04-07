@@ -8,9 +8,8 @@ import SysExEvent from "../sysex/SysExEvent";
 
 export default class EventFactory
 {
-	static fromStream(stream: ReadStream, status: StatusBytes): Event
+	static fromStream(stream: ReadStream, status: StatusBytes, delta: number = 0): Event
 	{
-		const delta = stream.readVLV();
 		const byte = stream.readByte();
 		const type = byte & 0xFF;
 

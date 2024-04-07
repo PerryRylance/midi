@@ -32,7 +32,10 @@ export default class Track
 				throw new ParseError(stream, "Unexpected end of track event");
 
 			cursor	= stream.getPosition();
-			event	= EventFactory.fromStream(stream, status);
+
+			const delta = stream.readVLV();
+
+			event	= EventFactory.fromStream(stream, status, delta);
 
 			if(!(event instanceof ControlEvent))
 				status[0] = status[1] = 0; // NB: Not on a control event, reset status bytes
@@ -69,6 +72,9 @@ export default class Track
 			const event = this.events[i];
 
 			validator.validateEvent(event, i);
+
+			// NB: Delta written here. Delta is a track concept and not related to pure events. We do this here so that events can be streamed in real time.
+			stream.writeVLV(event.delta);
 
 			event.writeBytes(stream, status);
 
