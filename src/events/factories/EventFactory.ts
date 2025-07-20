@@ -11,7 +11,7 @@ export default class EventFactory
 	static fromStream(stream: ReadStream, status: StatusBytes, delta: number = 0): Event
 	{
 		const byte = stream.readByte();
-		const type = byte & 0xFF;
+		const type = byte & 0xFF; // TODO: Is this really needed?
 
 		let result: Event;
 

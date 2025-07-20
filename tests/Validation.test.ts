@@ -38,7 +38,7 @@ const testEventHasZeroAbsoluteTime = (constructor: (typeof CopyrightEvent | type
 	expect(() => {
 		track.writeBytes(stream);
 	})
-		.toThrow(ValidationError);
+		.toThrow(ValidationError); // TODO: Always throws because no end of track!
 
 };
 
