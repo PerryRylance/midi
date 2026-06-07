@@ -1,11 +1,12 @@
 {
 	"include": [
-		"./src/**/*.ts"
+		"./src/**/*.ts",
+		"./tests/**/*.ts"
 	],
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 		"types": [
-			"@types/jest"
+			"jest"
 		],
 		/* Projects */
 		// "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
