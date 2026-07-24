@@ -1,9 +1,15 @@
 import Track from "./Track";
 import Event from "./events/Event";
+import EndOfTrackEvent from "./events/meta/EndOfTrackEvent";
 
 type AbsoluteEventWrapper = {
     event: Event;
     absolute: number;
+}
+
+type FlattenOptions = {
+    preserveEndOfTrackEvents?: boolean;
+    appendEndOfTrackEvent?: boolean;
 }
 
 export default class TrackCollection extends Array<Track>
@@ -11,30 +17,41 @@ export default class TrackCollection extends Array<Track>
     /**
      * Flattens an array of two or more tracks into a single track, adjusting delta, stable by track order.
      */
-    flatten()
+    flatten(options?: FlattenOptions)
     {
-        const events: AbsoluteEventWrapper[] = [];
+        const { preserveEndOfTrackEvents = false, appendEndOfTrackEvent = true } = options ?? {};
+        const totalCumulativeDelta = this.map(({ events }) => events.reduce((sum, { delta }) => sum + delta, 0));
+        const longestTrackAbsolute = Math.max(...totalCumulativeDelta);
+        const wrappers: AbsoluteEventWrapper[] = [];
+
+        if(preserveEndOfTrackEvents && appendEndOfTrackEvent)
+            throw new Error("Cannot preserve end of track events and append end of track event, these parameters are mutually exclusive");
 
         this.forEach(track => {
             let absolute = 0;
 
-            track.events.forEach(event => {
+            track
+                .events
+                .forEach(event => {
 
-                absolute += event.delta;
+                    if(!preserveEndOfTrackEvents && event instanceof EndOfTrackEvent)
+                        return;
 
-                events.push({
-                    event,
-                    absolute
+                    absolute += event.delta;
+
+                    wrappers.push({
+                        event,
+                        absolute
+                    });
+
                 });
-
-            });
         });
         
-        events.sort((a, b) => a.absolute - b.absolute);
+        wrappers.sort((a, b) => a.absolute - b.absolute);
 
         let absolute = 0;
 
-        const adjusted: Event[] = events.map(wrapper => {
+        const adjusted: Event[] = wrappers.map(wrapper => {
 
             wrapper.event.delta = wrapper.absolute - absolute;
 
@@ -49,6 +66,9 @@ export default class TrackCollection extends Array<Track>
         const track = new Track();
 
         track.events = adjusted;
+
+        if(appendEndOfTrackEvent)
+            track.events.push(new EndOfTrackEvent(longestTrackAbsolute - absolute));
 
         this.push(track);
     }

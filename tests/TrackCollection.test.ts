@@ -1,4 +1,4 @@
-import { NoteOnEvent, Track, Event, NoteOffEvent, ControllerEvent, File } from "../src";
+import { NoteOnEvent, Track, Event, NoteOffEvent, ControllerEvent, File, EndOfTrackEvent } from "../src";
 import TrackCollection from "../src/TrackCollection";
 
 const getMultitrackCollection = () => {
@@ -68,6 +68,39 @@ test("Flatten is stable", () => {
     expect(events[0].delta).toBe(0);
     expect(events[1].delta).toBe(50);
     expect(events[2].delta).toBe(0);
+
+});
+
+test("Flatten strips EndOfTrackEvent events except last", () => {
+
+    const collection = getMultitrackCollection();
+
+    collection[0].events.push(new EndOfTrackEvent);
+    collection[1].events.push(new EndOfTrackEvent);
+
+    collection.flatten();
+
+    const events = collection[0].events;
+
+    expect(events.filter(event => event instanceof EndOfTrackEvent)).toHaveLength(1);
+    expect(events.at(-1)).toBeInstanceOf(EndOfTrackEvent);
+
+});
+
+test("Flatten keeps latest temporal EndOfTrackEvent", () => {
+
+    const collection = getMultitrackCollection();
+
+    collection[0].events.push(new EndOfTrackEvent(600));
+    collection[1].events.push(new EndOfTrackEvent);
+
+    collection.flatten();
+
+    const events = collection[0].events;
+    const totalCumulativeDelta = events.reduce((sum, { delta }) => sum + delta, 0);
+
+    expect(events.at(-1)).toBeInstanceOf(EndOfTrackEvent);
+    expect(totalCumulativeDelta).toBe(1000);
 
 });
 
