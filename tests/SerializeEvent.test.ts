@@ -39,13 +39,13 @@ const getUint8ArrayFromEvent = (event: Event) =>
 
 const doesOutputMatchByteArray = (event: Event, expected: number[]) =>
 {
-	const output: ArrayBuffer = getUint8ArrayFromEvent(event);
+	const output: Uint8Array = getUint8ArrayFromEvent(event);
 
 	if(output.byteLength !== expected.length)
 		return false;
 	
 	for(let i = 0; i < expected.length; i++)
-		if(output[(i as unknown) as keyof ArrayBuffer] !== expected[i])
+		if(output[(i as unknown) as keyof Uint8Array] !== expected[i])
 			return false;
 
 	return true;

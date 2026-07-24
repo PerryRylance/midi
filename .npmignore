@@ -2,4 +2,5 @@
 /tests
 /.vscode
 tsconfig.json
+tsconfig.build.json
 babel.config.js

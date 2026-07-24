@@ -4,6 +4,7 @@ import ParseError from "./exceptions/ParseError";
 import WriteStream from "./streams/WriteStream";
 import FileValidator from "./validators/FileValidator";
 import Resolution from "./Resolution";
+import TrackCollection from "./TrackCollection";
 
 const MThd = 0x4D546864;
 
@@ -15,9 +16,26 @@ export enum Format {
 
 export default class File
 {
-	tracks: Track[] = [];
+	private _tracks: TrackCollection = new TrackCollection();
+
 	format: Format = Format.TYPE_1;
 	resolution: Resolution = new Resolution();
+
+	get tracks(): TrackCollection
+	{
+		return this._tracks;
+	}
+
+	set tracks(value: TrackCollection | Track[])
+	{
+		if (value instanceof TrackCollection) {
+			this._tracks = value;
+		} else {
+			// NB: Mutate the prototype so that the incoming value can still be manipulated, for compatibility reasons. Otherwise old code that sets this to a Track[] will break if the developer continues working on that array - the changes need to be reflected in our TrackCollection.
+			Object.setPrototypeOf(value, TrackCollection.prototype);
+			this._tracks = value as TrackCollection;
+		}
+	}
 
 	static fromArrayBuffer(data: ArrayBuffer): File
 	{
@@ -69,7 +87,7 @@ export default class File
 	{
 		const numTracks	= this.readHeader(stream);
 
-		this.tracks = [];
+		this.tracks = new TrackCollection();
 
 		for(let i = 0; i < numTracks; i++)
 		{
