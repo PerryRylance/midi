@@ -8,7 +8,7 @@ import WriteStream from "../src/streams/WriteStream";
 import UnsupportedTrackError from "../src/exceptions/UnsupportedTrackError";
 import ValidationError from "../src/exceptions/ValidationError";
 
-const files = globSync("./tests/fixtures/midi-1/*.mid");
+const files = globSync("./tests/fixtures/**/*.mid*");
 
 function writebackToUint8Array(midi: File)
 {
