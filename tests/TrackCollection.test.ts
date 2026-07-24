@@ -23,7 +23,7 @@ test("Flattens events in correct order", () => {
 
     const collection = getMultitrackCollection();
 
-    collection.flatten();
+    collection.flatten({ appendEndOfTrackEvent: false });
 
     expect(collection.length).toBe(1);
 
