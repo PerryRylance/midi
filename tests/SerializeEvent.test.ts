@@ -299,3 +299,19 @@ test("Serialize pitch wheel event", () => {
 	expect(event.value).toBe(0x3FFF);
 
 });
+
+test("Serialize text with VLV length", () => {
+
+	const chars = 'abcdefghijklmnopqrstuvwxyz ';
+	const event = new TextEvent();
+
+	event.text = Array.from({ length: 300 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join("");
+
+	expect(event.text.length).toBe(300);
+
+	const output = getUint8ArrayFromEvent(event);
+
+	// NB: 1 byte for meta, 1 byte for type, 2 bytes for VLV length, 300 bytes for text
+	expect(output.byteLength).toBe(304);
+
+});

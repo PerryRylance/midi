@@ -86,19 +86,6 @@ test("Channel prefix channel too high throws range error", () => {
 
 });
 
-test("Text events text cannot exceed length 255", () => {
-
-	const tooLongText = "a".repeat(256);
-
-	for(const constructor of TEXT_EVENT_CLASSES)
-	{
-		const event = new constructor();
-
-		expect(() => event.text = tooLongText).toThrow(RangeError);
-	}
-
-});
-
 test("Text events text cannot contain non-ASCII characters", () => {
 
 	expect(() => {

@@ -21,7 +21,7 @@ export default class TextEvent extends MetaEvent
 
 	readBytes(stream: ReadStream): void
 	{
-		const length = stream.readByte();
+		const length = stream.readVLV();
 
 		for(let i = 0; i < length; i++)
 			this.text += String.fromCharCode(stream.readByte());
@@ -31,7 +31,7 @@ export default class TextEvent extends MetaEvent
 	{
 		super.writeBytes(stream);
 
-		stream.writeByte(this.text.length);
+		stream.writeVLV(this.text.length);
 
 		for(let i = 0; i < this.text.length; i++)
 			stream.writeByte(this.text.charCodeAt(i));
@@ -44,9 +44,9 @@ export default class TextEvent extends MetaEvent
 
 	private assertValidText(value: string): void
 	{
-		if(value.length > 255)
-			throw new RangeError("Text too long");
-		
+		if(value.length > 0x0FFFFFFF)
+			throw new RangeError("Text too long"); // NB: I'd really hope not but this is the maximum a VLV can represent
+
 		if(!/^[\x00-\xFF]*$/.test(value))
 			throw new RangeError("One or more characters are not valid ASCII");
 	}
