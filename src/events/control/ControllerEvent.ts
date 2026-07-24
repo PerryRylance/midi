@@ -3,7 +3,7 @@ import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
 import ControlEvent, { ControlEventType } from "./ControlEvent";
 
-export enum ControllerType
+export enum NamedControllerType
 {
 	BANK_SELECT_COARSE                  = 0x00,
 	MODULATION_WHEEL_COARSE             = 0x01,
@@ -75,6 +75,20 @@ export enum ControllerType
 	MONO_OPERATION_AND_ALL_NOTES_OFF    = 0x7E,
 	POLY_OPERATION_AND_ALL_NOTES_OFF    = 0x7F
 };
+
+type UndefinedControllerType =
+	0x03 |
+	0x09 |
+	0x0E | 0x0F |
+	0x14 | 0x15 | 0x16 | 0x17 | 0x18 | 0x19 | 0x1A | 0x1B | 0x1C | 0x1D | 0x1E | 0x1F |
+	0x55 | 0x56 | 0x57 |
+	0x59 | 0x5A |
+	0x66 | 0x67 | 0x68 | 0x69 | 0x6A | 0x6B | 0x6C | 0x6D | 0x6E | 0x6F |
+	0x70 | 0x71 | 0x72 | 0x73 | 0x74 | 0x75 | 0x76 | 0x77;
+
+// NB: Don't break older code that wants to use ControllerType.WHATEVER instead of NamedControllerType.
+export type ControllerType = NamedControllerType | UndefinedControllerType;
+export const ControllerType = NamedControllerType;
 
 export default class ControllerEvent extends ControlEvent
 {
