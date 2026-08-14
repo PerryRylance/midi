@@ -8,6 +8,13 @@ export default class PitchWheelEvent extends ControlEvent
 {
 	value: number = 0x2000; // NB: Value as a 14-bit number. Signed, but without any sign bit. This value is zero.
 
+	constructor(delta?: number, channel?: number, amount: number = 0.0)
+	{
+		super(delta, channel);
+
+		this.amount = amount;
+	}
+
 	readBytes(stream: ReadStream): void
 	{
 		const first		= stream.readByte();
