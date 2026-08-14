@@ -38,6 +38,7 @@ import UnsupportedTrackError from "./exceptions/UnsupportedTrackError";
 import ReadStream from "./streams/ReadStream";
 import Stream from "./streams/Stream";
 import WriteStream from "./streams/WriteStream";
+import PitchBendRangeEventsFactory from "./events/factories/PitchBendRangeEventsFactory";
 
 import { Format } from "./File";
 import { EventType } from "./events/Event";
@@ -102,5 +103,6 @@ export {
 	FrameRate as Rate, // NB: Compatibility with < 1.0.3
 	UniversalDevices,
 	Resolution,
-	ResolutionUnits
+	ResolutionUnits,
+	PitchBendRangeEventsFactory
 };
