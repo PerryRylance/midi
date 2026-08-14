@@ -1,4 +1,4 @@
-import { ControllerEvent } from "../src";
+import { ControllerEvent, ControllerType } from "../src";
 
 test("Can assign undefined CC types", () => {
 
@@ -19,10 +19,14 @@ test("Cannot assign out of range CC type", () => {
 
 });
 
+test("Can assign type via contructor", () => {
+
+    expect(new ControllerEvent(0, 0, ControllerType.HOLD_PEDAL_1).controller).toBe(ControllerType.HOLD_PEDAL_1);
+
+});
+
 test("Can assign value via constructor", () => {
 
-    const event = new ControllerEvent(0, 0, 123);
-
-    expect(event.value).toBe(123);
+    expect(new ControllerEvent(0, 0, ControllerType.BANK_SELECT_COARSE, 123).value).toBe(123);
 
 });

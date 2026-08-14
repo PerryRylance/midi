@@ -90,14 +90,19 @@ type UndefinedControllerType =
 export type ControllerType = NamedControllerType | UndefinedControllerType;
 export const ControllerType = NamedControllerType;
 
-export default class ControllerEvent extends ControlEvent
+export default class ControllerEvent<
+	C extends ControllerType = ControllerType,
+	V extends number = number
+> extends ControlEvent
 {
 	controller: ControllerType = ControllerType.BANK_SELECT_COARSE;
 	value: number = 0;
 
-	constructor(delta?: number, channel?: number, value?: number)
+	constructor(delta?: number, channel?: number, controller: C = ControllerType.BANK_SELECT_COARSE as C, value?: V)
 	{
 		super(delta, channel);
+
+		this.controller = controller;
 
 		if(value)
 			this.value = value;
