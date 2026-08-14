@@ -18,3 +18,11 @@ test("Cannot assign out of range CC type", () => {
     event.controller = 0x80;
 
 });
+
+test("Can assign value via constructor", () => {
+
+    const event = new ControllerEvent(0, 0, 123);
+
+    expect(event.value).toBe(123);
+
+});

@@ -95,6 +95,14 @@ export default class ControllerEvent extends ControlEvent
 	controller: ControllerType = ControllerType.BANK_SELECT_COARSE;
 	value: number = 0;
 
+	constructor(delta?: number, channel?: number, value?: number)
+	{
+		super(delta, channel);
+
+		if(value)
+			this.value = value;
+	}
+
 	readBytes(stream: ReadStream): void
 	{
 		this.controller = stream.readByte();
