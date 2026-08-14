@@ -25,11 +25,11 @@ test("Bend range factory produces expected head", () => {
 
     expect(events[0]).toBeInstanceOf(ControllerEvent);
     expect(events[0].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_FINE);
-    expect(events[0].value).toBe(0x7F);
+    expect(events[0].value).toBe(0);
 
     expect(events[1]).toBeInstanceOf(ControllerEvent);
     expect(events[1].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_COARSE);
-    expect(events[1].value).toBe(0x7F);
+    expect(events[1].value).toBe(0);
 
 });
 
@@ -39,11 +39,11 @@ test("Bend range factory produces expected tail", () => {
 
     expect(events[3]).toBeInstanceOf(ControllerEvent);
     expect(events[3].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_FINE);
-    expect(events[3].value).toBe(0);
+    expect(events[3].value).toBe(0x7F);
 
     expect(events[4]).toBeInstanceOf(ControllerEvent);
     expect(events[4].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_COARSE);
-    expect(events[4].value).toBe(0);
+    expect(events[4].value).toBe(0x7F);
 
 });
 
