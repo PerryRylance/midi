@@ -6,6 +6,7 @@ import FileValidator from "./validators/FileValidator";
 import Resolution from "./Resolution";
 import TrackCollection from "./TrackCollection";
 import { CallableArray, createCallableArray, adoptCallableArray } from "./CallableArray";
+import Probeable from "./Probeable";
 
 const MThd = 0x4D546864;
 
@@ -15,19 +16,12 @@ export enum Format {
 	TYPE_2	= 2
 };
 
-export default class File
+export default class File extends Probeable
 {
 	private readonly _tracksArray: CallableArray<Track, this, TrackCollection> = createCallableArray<Track, this, TrackCollection>(this, new TrackCollection());
 
 	format: Format = Format.TYPE_1;
 	resolution: Resolution = new Resolution();
-
-	probe()
-	{
-		debugger;
-
-		return this;
-	}
 
 	get tracks(): CallableArray<Track, this, TrackCollection>
 	{

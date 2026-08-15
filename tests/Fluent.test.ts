@@ -1,4 +1,4 @@
-import { File, MetaEvent, NoteOffEvent, NoteOnEvent, Track, TrackNameEvent } from "../src";
+import { File, MetaEvent, NoteOffEvent, NoteOnEvent, ProgramChangeEvent, ProgramType, Track, TrackNameEvent } from "../src";
 
 test("Adds tracks fluently", () => {
 

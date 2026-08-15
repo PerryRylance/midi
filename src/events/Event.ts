@@ -2,6 +2,7 @@ import ReadStream from "../streams/ReadStream";
 import { StatusBytes } from "../streams/StatusBytes";
 import WriteStream from "../streams/WriteStream";
 import { CallableAccessor, createCallableAccessor } from "../CallableProperty";
+import Probeable from "../Probeable";
 
 export enum EventType {
 	CONTROL = 0,
@@ -9,13 +10,15 @@ export enum EventType {
 	META = 0xFF
 };
 
-export default abstract class Event
+export default abstract class Event extends Probeable
 {
 	private _delta: number = 0;
 	private _deltaAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta: number = 0)
 	{
+		super();
+
 		this.delta = delta;
 	}
 

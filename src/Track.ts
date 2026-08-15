@@ -9,19 +9,13 @@ import ControlEvent from "./events/control/ControlEvent";
 import UnsupportedTrackError from "./exceptions/UnsupportedTrackError";
 import TrackValidator from "./validators/TrackValidator";
 import { CallableArray, createCallableArray, adoptCallableArray } from "./CallableArray";
+import Probeable from "./Probeable";
 
 const MTrk		= 0x4D54726B;
 
-export default class Track
+export default class Track extends Probeable
 {
 	private readonly _eventsArray: CallableArray<Event, this> = createCallableArray<Event, this>(this);
-
-	probe()
-	{
-		debugger;
-
-		return this;
-	}
 
 	get events(): CallableArray<Event, this>
 	{

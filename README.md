@@ -20,14 +20,70 @@ There are many JS / TS MIDI parsers online, this library is unique in that not o
 - Instantiate any subclasses of `Event` you need, eg `NoteOnEvent`
 - Push your events to the tracks `events`
 
+For more advanced usage, see the fluent documentation below.
+
 ### Writing MIDI data
 - You'll need a `File` either read in or created from scratch as described above
 - Instantiate a `new WriteStream`
 - Call `writeBytes` on your `File` passing in your `WriteStream`
 - You can use `toArrayBuffer` from the `WriteStream` then do whatever you need
-- `toDataURL` is also provided for convenience
+- `toDataUrl` is also provided for convenience
 
 ## Version overview
+
+### 1.2.*
+A new fluent API has been added to allow easier composition with less boilerplate. Full compatibility with earlier versions is maintained.
+
+```typescript
+new File()
+    .tracks([
+        new Track()
+            .events([
+                new TrackNameEvent()
+                    .text("Bass"),
+                new ProgramChangeEvent()
+                    .program(ProgramType.SLAP_BASS_1),
+                new NoteOnEvent()
+                    .key(48),
+                new NoteOffEvent()
+                    .delta(960)
+                    .key(48)
+            ])
+    ])
+    .toArrayBuffer();
+```
+
+If you need to inspect an item using your stepping debugger you can use `probe()`:
+
+```typescript
+new File()
+    .tracks([
+        new Track()
+            .events([
+                new TrackNameEvent().text("Inspect me")
+            ])
+            .probe()
+    ]);
+```
+
+You can also call `probe()` conditionally:
+
+```typescript
+new File()
+    .tracks([
+        "Lead",
+        "Bass",
+        "Percussion"
+    ].map(name => new Track()
+        .events([
+            new TrackNameEvent().text(name)
+        ])
+        .probe(name == "Lead")
+    ));
+```
+
+See `Fluent.test.ts` for very basic examples.
+
 ### 1.1.*
 This library was originally conceived to work purely with files and not with real-time streams. 1.1.0 introduces some changes that make working with real-time streams easier. MIDI delta time is a concept that relates strictly to files with tracks, as opposed to real-time streams do not use delta time on events at all - we simply need to send events down the stream and timing is left entirely up to the device sending.
 
