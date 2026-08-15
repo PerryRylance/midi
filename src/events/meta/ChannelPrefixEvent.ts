@@ -2,14 +2,16 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class ChannelPrefixEvent extends MetaEvent
 {
 	private _channel: number = 0;
+	private _channelAccessor?: CallableAccessor<number, this>;
 
-	get channel(): number
+	get channel(): CallableAccessor<number, this>
 	{
-		return this._channel;
+		return this._channelAccessor ??= createCallableAccessor(this, () => this._channel, value => { this.channel = value; });
 	}
 
 	set channel(value: number)

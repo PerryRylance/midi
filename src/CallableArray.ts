@@ -1,16 +1,19 @@
-export type CallableArray<T> = T[] & {
-    (value: T[] | (() => T[])): unknown;
+export type CallableArray<T, TOwner = unknown, A extends T[] = T[]> = A & {
+    (value: T[] | (() => T[])): TOwner;
 };
 
+const backingSetters = new WeakMap<object, (next: unknown[]) => void>();
+
 /**
- * Wraps a plain array in a Proxy so it remains usable as a normal array (indexing, length,
- * iteration, push/forEach/etc via delegation) but can also be invoked as a function to
- * replace its contents. Calling it returns `owner` rather than the array itself, so the
- * owning instance can be chained, e.g. `instance.items(['a', 'b']).otherMethod()`.
+ * Wraps a plain array (or an Array subclass instance, e.g. TrackCollection) in a Proxy so it
+ * remains usable as a normal array (indexing, length, iteration, push/forEach/etc via
+ * delegation, instanceof via prototype delegation) but can also be invoked as a function to
+ * replace its contents. Calling it returns `owner` (typed, so `instance.items(['a', 'b'])`
+ * chains straight into `owner`'s other methods) rather than the array itself.
  */
-export function createCallableArray<T>(owner: unknown, initial?: T[]): CallableArray<T>
+export function createCallableArray<T, TOwner = unknown, A extends T[] = T[]>(owner: TOwner, initial?: A): CallableArray<T, TOwner, A>
 {
-    const backing: T[] = initial ? [...initial] : [];
+    let backing: T[] = initial ?? [];
 
     const handler: ProxyHandler<() => void> = {
 
@@ -55,6 +58,16 @@ export function createCallableArray<T>(owner: unknown, initial?: T[]): CallableA
         getOwnPropertyDescriptor(_target, prop)
         {
             return Reflect.getOwnPropertyDescriptor(backing, prop);
+        },
+
+        getPrototypeOf()
+        {
+            return Reflect.getPrototypeOf(backing);
+        },
+
+        setPrototypeOf(_target, proto)
+        {
+            return Reflect.setPrototypeOf(backing, proto);
         }
 
     };
@@ -62,5 +75,25 @@ export function createCallableArray<T>(owner: unknown, initial?: T[]): CallableA
     // NB: Target must be an arrow function - it has no "prototype" property, which would
     // otherwise be a non-configurable key on the target with nothing to match it on the
     // backing array, violating the ownKeys/getOwnPropertyDescriptor Proxy invariants.
-    return new Proxy(() => {}, handler) as unknown as CallableArray<T>;
+    const array = new Proxy(() => {}, handler) as unknown as CallableArray<T, TOwner, A>;
+
+    backingSetters.set(array, next => { backing = next as T[]; });
+
+    return array;
+}
+
+/**
+ * Swaps the backing array/collection of a callable array created by createCallableArray,
+ * in place, without recreating the Proxy - so a property can support `instance.prop = x`
+ * reference-swap semantics (matching what a plain array field would do) while the callable
+ * wrapper itself stays memoized (created once per instance, not once per access).
+ */
+export function adoptCallableArray<T, TOwner, A extends T[]>(array: CallableArray<T, TOwner, A>, next: A): void
+{
+    const setter = backingSetters.get(array);
+
+    if(!setter)
+        throw new TypeError("Value was not created by createCallableArray");
+
+    setter(next);
 }

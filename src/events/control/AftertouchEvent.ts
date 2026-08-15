@@ -2,15 +2,18 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import { StatusBytes } from "../../streams/StatusBytes";
 import ControlEvent, { ControlEventType } from "./ControlEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class AftertouchEvent extends ControlEvent
 {
 	private _key: number = 60;
 	private _pressure: number = 127;
+	private _keyAccessor?: CallableAccessor<number, this>;
+	private _pressureAccessor?: CallableAccessor<number, this>;
 
-	get key(): number
+	get key(): CallableAccessor<number, this>
 	{
-		return this._key;
+		return this._keyAccessor ??= createCallableAccessor(this, () => this._key, value => { this.key = value; });
 	}
 
 	set key(value: number)
@@ -20,9 +23,9 @@ export default class AftertouchEvent extends ControlEvent
 		this._key = value;
 	}
 
-	get pressure(): number
+	get pressure(): CallableAccessor<number, this>
 	{
-		return this._pressure;
+		return this._pressureAccessor ??= createCallableAccessor(this, () => this._pressure, value => { this.pressure = value; });
 	}
 
 	set pressure(value: number)

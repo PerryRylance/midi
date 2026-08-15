@@ -2,14 +2,16 @@ import ReadStream from "../../streams/ReadStream";
 import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
 import ControlEvent, { ControlEventType } from "./ControlEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class ChannelAftertouchEvent extends ControlEvent
 {
 	private _pressure: number = 127;
+	private _pressureAccessor?: CallableAccessor<number, this>;
 
-	get pressure(): number
+	get pressure(): CallableAccessor<number, this>
 	{
-		return this._pressure;
+		return this._pressureAccessor ??= createCallableAccessor(this, () => this._pressure, value => { this.pressure = value; });
 	}
 
 	set pressure(value: number)

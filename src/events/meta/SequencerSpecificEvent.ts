@@ -2,11 +2,23 @@ import ReadStream from "../../streams/ReadStream";
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import DeviceManufacturer from "../../DeviceManufacturer";
 import WriteStream from "../../streams/WriteStream";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class SequencerSpecificEvent extends MetaEvent
 {
-	manufacturer: DeviceManufacturer = DeviceManufacturer.AKAI;
+	private _manufacturer: DeviceManufacturer = DeviceManufacturer.AKAI;
+	private _manufacturerAccessor?: CallableAccessor<DeviceManufacturer, this>;
 	bytes: Uint8Array = new Uint8Array();
+
+	get manufacturer(): CallableAccessor<DeviceManufacturer, this>
+	{
+		return this._manufacturerAccessor ??= createCallableAccessor(this, () => this._manufacturer, value => { this.manufacturer = value; });
+	}
+
+	set manufacturer(value: DeviceManufacturer)
+	{
+		this._manufacturer = value;
+	}
 
 	readBytes(stream: ReadStream): void
 	{

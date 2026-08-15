@@ -69,3 +69,39 @@ export function createCallableAccessor<T, TOwner>(owner: TOwner, get: () => T, s
 
     return callable;
 }
+
+/**
+ * Same contract as createCallableAccessor, but for string-valued properties that are used
+ * via string methods/properties directly (e.g. `.length`, `.charCodeAt(i)`) rather than only
+ * via coercion in an operator. valueOf/Symbol.toPrimitive alone (as createCallableAccessor
+ * uses) don't cover `.length` et al - a bare function has its own (wrong) `.length`, and none
+ * of String.prototype's methods - so this delegates every property/method access to a fresh
+ * boxed String reflecting the current value, via a Proxy (heavier than createCallableAccessor,
+ * but text-like meta events are comparatively rare compared to note/controller events).
+ */
+export function createCallableStringAccessor<TOwner>(owner: TOwner, get: () => string, set: (value: string) => void): CallableAccessor<string, TOwner>
+{
+    const handler: ProxyHandler<() => void> = {
+
+        apply(_target, _thisArg, args: [] | [string])
+        {
+            if(args.length === 0)
+                return get();
+
+            set(args[0]);
+
+            return owner;
+        },
+
+        get(_target, prop, receiver)
+        {
+            const boxed = new String(get());
+            const value = Reflect.get(boxed, prop, receiver);
+
+            return typeof value === "function" ? value.bind(boxed) : value;
+        }
+
+    };
+
+    return new Proxy(() => {}, handler) as unknown as CallableAccessor<string, TOwner>;
+}

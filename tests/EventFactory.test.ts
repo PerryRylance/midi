@@ -44,7 +44,7 @@ test("Read text event", () => {
 	const event = getEventFromByteArray<TextEvent>(EventByteArrays.TEXT);
 
 	expect(event).toBeInstanceOf(TextEvent);
-	expect(event.text).toBe("Bass");
+	expect(event.text).toEqualValue("Bass");
 
 });
 
@@ -59,7 +59,7 @@ test("Read copyright event", () => {
 	const event = getEventFromByteArray<CopyrightEvent>(EventByteArrays.COPYRIGHT);
 
 	expect(event).toBeInstanceOf(CopyrightEvent);
-	expect(event.text).toBe("© 2009 Kaliopa Publishing, LLC");
+	expect(event.text).toEqualValue("© 2009 Kaliopa Publishing, LLC");
 
 });
 
@@ -68,7 +68,7 @@ test("Read track name event", () => {
 	const event = getEventFromByteArray<TrackNameEvent>(EventByteArrays.TRACK_NAME);
 
 	expect(event).toBeInstanceOf(TrackNameEvent);
-	expect(event.text).toBe("Bass");
+	expect(event.text).toEqualValue("Bass");
 
 });
 
@@ -77,7 +77,7 @@ test("Read instrument name event", () => {
 	const event = getEventFromByteArray<InstrumentNameEvent>(EventByteArrays.INSTRUMENT_NAME);
 
 	expect(event).toBeInstanceOf(InstrumentNameEvent);
-	expect(event.text).toBe("Bass");
+	expect(event.text).toEqualValue("Bass");
 
 });
 
@@ -86,7 +86,7 @@ test("Read lyric event", () => {
 	const event = getEventFromByteArray<LyricEvent>(EventByteArrays.LYRIC);
 
 	expect(event).toBeInstanceOf(LyricEvent);
-	expect(event.text).toBe("la-");
+	expect(event.text).toEqualValue("la-");
 
 });
 
@@ -95,7 +95,7 @@ test("Read marker event", () => {
 	const event = getEventFromByteArray<MarkerEvent>(EventByteArrays.MARKER);
 
 	expect(event).toBeInstanceOf(MarkerEvent);
-	expect(event.text).toBe("Verse");
+	expect(event.text).toEqualValue("Verse");
 
 });
 
@@ -104,7 +104,7 @@ test("Read cue point event", () => {
 	const event = getEventFromByteArray<CuePointEvent>(EventByteArrays.CUE_POINT);
 
 	expect(event).toBeInstanceOf(CuePointEvent);
-	expect(event.text).toBe("Solo");
+	expect(event.text).toEqualValue("Solo");
 
 });
 
@@ -113,7 +113,7 @@ test("Read set tempo event", () => {
 	const event = getEventFromByteArray<SetTempoEvent>(EventByteArrays.SET_TEMPO);
 
 	expect(event).toBeInstanceOf(SetTempoEvent);
-	expect(event.bpm).toBe(120);
+	expect(event.bpm).toEqualValue(120);
 
 });
 
@@ -122,12 +122,12 @@ test("Read SMTPE offset event", () => {
 	const event = getEventFromByteArray<SmtpeOffsetEvent>(EventByteArrays.SMTPE_OFFSET);
 
 	expect(event).toBeInstanceOf(SmtpeOffsetEvent);
-	expect(event.rate).toBe(FrameRate.FPS_24);
-	expect(event.hours).toBe(1);
-	expect(event.minutes).toBe(0);
-	expect(event.seconds).toBe(0);
-	expect(event.frames).toBe(0);
-	expect(event.subframes).toBe(0);
+	expect(event.rate).toEqualValue(FrameRate.FPS_24);
+	expect(event.hours).toEqualValue(1);
+	expect(event.minutes).toEqualValue(0);
+	expect(event.seconds).toEqualValue(0);
+	expect(event.frames).toEqualValue(0);
+	expect(event.subframes).toEqualValue(0);
 
 });
 
@@ -135,7 +135,7 @@ test("Read sequence number event", () => {
 
 	const event = getEventFromByteArray<SequenceNumberEvent>(EventByteArrays.SEQUENCE_NUMBER);
 
-	expect(event.number).toBe(2);
+	expect(event.number).toEqualValue(2);
 
 });
 
@@ -152,7 +152,7 @@ test("Read channel prefix event", () => {
 	const event = getEventFromByteArray<ChannelPrefixEvent>(EventByteArrays.CHANNEL_PREFIX);
 
 	expect(event).toBeInstanceOf(ChannelPrefixEvent);
-	expect(event.channel).toBe(2);
+	expect(event.channel).toEqualValue(2);
 
 });
 
@@ -161,7 +161,7 @@ test("Read port prefix event", () => {
 	const event = getEventFromByteArray<PortPrefixEvent>(EventByteArrays.PORT_PREFIX);
 
 	expect(event).toBeInstanceOf(PortPrefixEvent);
-	expect(event.port).toBe(3);
+	expect(event.port).toEqualValue(3);
 
 });
 
@@ -170,8 +170,8 @@ test("Read key signature event", () => {
 	const event = getEventFromByteArray<KeySignatureEvent>(EventByteArrays.KEY_SIGNATURE);
 
 	expect(event).toBeInstanceOf(KeySignatureEvent);
-	expect(event.accidentals).toBe(4);
-	expect(event.quality).toBe(Quality.MAJOR);
+	expect(event.accidentals).toEqualValue(4);
+	expect(event.quality).toEqualValue(Quality.MAJOR);
 
 });
 
@@ -180,10 +180,10 @@ test("Read time signature event", () => {
 	const event = getEventFromByteArray<TimeSignatureEvent>(EventByteArrays.TIME_SIGNATURE);
 
 	expect(event).toBeInstanceOf(TimeSignatureEvent);
-	expect(event.numerator).toBe(4);
-	expect(event.denominator).toBe(4);
-	expect(event.ticksPerMetronomeClick).toBe(24);
-	expect(event.num32ndNotesPerBeat).toBe(8);
+	expect(event.numerator).toEqualValue(4);
+	expect(event.denominator).toEqualValue(4);
+	expect(event.ticksPerMetronomeClick).toEqualValue(24);
+	expect(event.num32ndNotesPerBeat).toEqualValue(8);
 
 });
 
@@ -192,7 +192,7 @@ test("Read sequencer specific event", () => {
 	const event = getEventFromByteArray<SequencerSpecificEvent>(EventByteArrays.SEQUENCER_SPECIFIC);
 
 	expect(event).toBeInstanceOf(SequencerSpecificEvent);
-	expect(event.manufacturer).toBe(DeviceManufacturer.ROLAND);
+	expect(event.manufacturer).toEqualValue(DeviceManufacturer.ROLAND);
 	expect(event.bytes.length).toBe(3);
 
 });
@@ -208,7 +208,7 @@ test("Read sysex event", () => {
 	const event = getEventFromByteArray<SysExEvent>(EventByteArrays.SYSEX);
 
 	expect(event).toBeInstanceOf(SysExEvent);
-	expect(event.manufacturer).toBe(DeviceManufacturer.ROLAND);
+	expect(event.manufacturer).toEqualValue(DeviceManufacturer.ROLAND);
 	expect(event.bytes.byteLength).toBe(2);
 
 });
@@ -218,9 +218,9 @@ test("Read note on event", () => {
 	const event = getEventFromByteArray<NoteOnEvent>(EventByteArrays.NOTE_ON);
 
 	expect(event).toBeInstanceOf(NoteOnEvent);
-	expect(event.channel).toBe(2);
-	expect(event.key).toBe(61);
-	expect(event.velocity).toBe(120);
+	expect(event.channel).toEqualValue(2);
+	expect(event.key).toEqualValue(61);
+	expect(event.velocity).toEqualValue(120);
 
 });
 
@@ -229,9 +229,9 @@ test("Read note off event", () => {
 	const event = getEventFromByteArray<NoteOffEvent>(EventByteArrays.NOTE_OFF);
 
 	expect(event).toBeInstanceOf(NoteOffEvent);
-	expect(event.channel).toBe(3);
-	expect(event.key).toBe(62);
-	expect(event.velocity).toBe(120);
+	expect(event.channel).toEqualValue(3);
+	expect(event.key).toEqualValue(62);
+	expect(event.velocity).toEqualValue(120);
 
 });
 
@@ -240,9 +240,9 @@ test("Read aftertouch / key pressure event", () => {
 	const event = getEventFromByteArray<AftertouchEvent>(EventByteArrays.AFTERTOUCH);
 
 	expect(event).toBeInstanceOf(AftertouchEvent);
-	expect(event.channel).toBe(4);
-	expect(event.key).toBe(63);
-	expect(event.pressure).toBe(121);
+	expect(event.channel).toEqualValue(4);
+	expect(event.key).toEqualValue(63);
+	expect(event.pressure).toEqualValue(121);
 
 });
 
@@ -251,9 +251,9 @@ test("Read controller event", () => {
 	const event = getEventFromByteArray<ControllerEvent>(EventByteArrays.CONTROLLER);
 
 	expect(event).toBeInstanceOf(ControllerEvent);
-	expect(event.channel).toBe(6);
-	expect(event.controller).toBe(ControllerType.CHANNEL_VOLUME_COARSE);
-	expect(event.value).toBe(16);
+	expect(event.channel).toEqualValue(6);
+	expect(event.controller).toEqualValue(ControllerType.CHANNEL_VOLUME_COARSE);
+	expect(event.value).toEqualValue(16);
 
 });
 
@@ -262,8 +262,8 @@ test("Read program change event", () => {
 	const event = getEventFromByteArray<ProgramChangeEvent>(EventByteArrays.PROGRAM_CHANGE);
 
 	expect(event).toBeInstanceOf(ProgramChangeEvent);
-	expect(event.channel).toBe(6);
-	expect(event.program).toBe(ProgramType.CLAVINET);
+	expect(event.channel).toEqualValue(6);
+	expect(event.program).toEqualValue(ProgramType.CLAVINET);
 
 });
 
@@ -272,8 +272,8 @@ test("Read channel aftertouch / channel pressure event", () => {
 	const event = getEventFromByteArray<ChannelAftertouchEvent>(EventByteArrays.CHANNEL_AFTERTOUCH);
 
 	expect(event).toBeInstanceOf(ChannelAftertouchEvent);
-	expect(event.channel).toBe(6);
-	expect(event.pressure).toBe(53);
+	expect(event.channel).toEqualValue(6);
+	expect(event.pressure).toEqualValue(53);
 
 });
 
@@ -282,7 +282,7 @@ test("Read pitch wheel event", () => {
 	const event = getEventFromByteArray<PitchWheelEvent>(EventByteArrays.PITCH_WHEEL);
 
 	expect(event).toBeInstanceOf(PitchWheelEvent);
-	expect(event.channel).toBe(3);
-	expect(event.value).toBe(0x1CD4);
+	expect(event.channel).toEqualValue(3);
+	expect(event.value).toEqualValue(0x1CD4);
 
 });

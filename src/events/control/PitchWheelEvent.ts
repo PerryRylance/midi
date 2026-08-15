@@ -3,16 +3,29 @@ import ControlEvent, { ControlEventType } from "./ControlEvent";
 import ParseError from "../../exceptions/ParseError";
 import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class PitchWheelEvent extends ControlEvent
 {
-	value: number = 0x2000; // NB: Value as a 14-bit number. Signed, but without any sign bit. This value is zero.
+	private _value: number = 0x2000; // NB: Value as a 14-bit number. Signed, but without any sign bit. This value is zero.
+	private _valueAccessor?: CallableAccessor<number, this>;
+	private _amountAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta?: number, channel?: number, amount: number = 0.0)
 	{
 		super(delta, channel);
 
 		this.amount = amount;
+	}
+
+	get value(): CallableAccessor<number, this>
+	{
+		return this._valueAccessor ??= createCallableAccessor(this, () => this._value, value => { this.value = value; });
+	}
+
+	set value(value: number)
+	{
+		this._value = value;
 	}
 
 	readBytes(stream: ReadStream): void
@@ -46,12 +59,16 @@ export default class PitchWheelEvent extends ControlEvent
 	}
 
 	// TODO: Test this out please, do we need remapping eg for exponent
-	get amount(): number
+	get amount(): CallableAccessor<number, this>
 	{
-		if(this.value <= 0x2000)
-			return -1 + 2 * ((1 + this.value) / 0x3FFF);
-		
-		return -1 + 2 * (this.value / 0x3FFF);
+		return this._amountAccessor ??= createCallableAccessor(this, () => {
+
+			if(this._value <= 0x2000)
+				return -1 + 2 * ((1 + this._value) / 0x3FFF);
+
+			return -1 + 2 * (this._value / 0x3FFF);
+
+		}, value => { this.amount = value; });
 	}
 
 	set amount(floating: number)

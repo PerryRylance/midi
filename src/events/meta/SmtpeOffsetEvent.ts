@@ -4,18 +4,86 @@ import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import { FrameRate } from "../../FrameRate";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class SmtpeOffsetEvent extends MetaEvent
 {
-	rate: number = FrameRate.FPS_24;
-	hours: number = 1;
-	minutes: number = 0;
-	seconds: number = 0;
-	frames: number = 0;
-	subframes: number = 0;
+	private _rate: number = FrameRate.FPS_24;
+	private _hours: number = 1;
+	private _minutes: number = 0;
+	private _seconds: number = 0;
+	private _frames: number = 0;
+	private _subframes: number = 0;
+
+	private _rateAccessor?: CallableAccessor<number, this>;
+	private _hoursAccessor?: CallableAccessor<number, this>;
+	private _minutesAccessor?: CallableAccessor<number, this>;
+	private _secondsAccessor?: CallableAccessor<number, this>;
+	private _framesAccessor?: CallableAccessor<number, this>;
+	private _subframesAccessor?: CallableAccessor<number, this>;
 
 	// TODO: Private and test parameters please
 	// TODO: See spec http://www.somascape.org/midi/tech/mfile.html#:~:text=SMPTE%20Offset,-FF%2054%2005&text=ff%20is%20a%20byte%20specifying,prior%20to%20any%20MIDI%20events.
+
+	get rate(): CallableAccessor<number, this>
+	{
+		return this._rateAccessor ??= createCallableAccessor(this, () => this._rate, value => { this.rate = value; });
+	}
+
+	set rate(value: number)
+	{
+		this._rate = value;
+	}
+
+	get hours(): CallableAccessor<number, this>
+	{
+		return this._hoursAccessor ??= createCallableAccessor(this, () => this._hours, value => { this.hours = value; });
+	}
+
+	set hours(value: number)
+	{
+		this._hours = value;
+	}
+
+	get minutes(): CallableAccessor<number, this>
+	{
+		return this._minutesAccessor ??= createCallableAccessor(this, () => this._minutes, value => { this.minutes = value; });
+	}
+
+	set minutes(value: number)
+	{
+		this._minutes = value;
+	}
+
+	get seconds(): CallableAccessor<number, this>
+	{
+		return this._secondsAccessor ??= createCallableAccessor(this, () => this._seconds, value => { this.seconds = value; });
+	}
+
+	set seconds(value: number)
+	{
+		this._seconds = value;
+	}
+
+	get frames(): CallableAccessor<number, this>
+	{
+		return this._framesAccessor ??= createCallableAccessor(this, () => this._frames, value => { this.frames = value; });
+	}
+
+	set frames(value: number)
+	{
+		this._frames = value;
+	}
+
+	get subframes(): CallableAccessor<number, this>
+	{
+		return this._subframesAccessor ??= createCallableAccessor(this, () => this._subframes, value => { this.subframes = value; });
+	}
+
+	set subframes(value: number)
+	{
+		this._subframes = value;
+	}
 
 	readBytes(stream: ReadStream)
 	{

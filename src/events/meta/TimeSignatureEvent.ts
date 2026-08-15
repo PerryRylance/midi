@@ -1,6 +1,7 @@
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class TimeSignatureEvent extends MetaEvent
 {
@@ -9,9 +10,14 @@ export default class TimeSignatureEvent extends MetaEvent
 	private _ticksPerMetronomeClick = 24;
 	private _num32ndNotesPerBeat = 8;
 
-	get numerator(): number
+	private _numeratorAccessor?: CallableAccessor<number, this>;
+	private _denominatorAccessor?: CallableAccessor<number, this>;
+	private _ticksPerMetronomeClickAccessor?: CallableAccessor<number, this>;
+	private _num32ndNotesPerBeatAccessor?: CallableAccessor<number, this>;
+
+	get numerator(): CallableAccessor<number, this>
 	{
-		return this._numerator;
+		return this._numeratorAccessor ??= createCallableAccessor(this, () => this._numerator, value => { this.numerator = value; });
 	}
 
 	set numerator(value: number)
@@ -22,9 +28,9 @@ export default class TimeSignatureEvent extends MetaEvent
 		this._numerator = value;
 	}
 
-	get denominator(): number
+	get denominator(): CallableAccessor<number, this>
 	{
-		return this._denominator;
+		return this._denominatorAccessor ??= createCallableAccessor(this, () => this._denominator, value => { this.denominator = value; });
 	}
 
 	set denominator(value: number)
@@ -37,9 +43,9 @@ export default class TimeSignatureEvent extends MetaEvent
 		this._denominator = value;
 	}
 
-	get ticksPerMetronomeClick(): number
+	get ticksPerMetronomeClick(): CallableAccessor<number, this>
 	{
-		return this._ticksPerMetronomeClick;
+		return this._ticksPerMetronomeClickAccessor ??= createCallableAccessor(this, () => this._ticksPerMetronomeClick, value => { this.ticksPerMetronomeClick = value; });
 	}
 
 	// TODO: Not too sure about this. Check spec for valid values
@@ -51,9 +57,9 @@ export default class TimeSignatureEvent extends MetaEvent
 		this._ticksPerMetronomeClick = value;
 	}
 
-	get num32ndNotesPerBeat(): number
+	get num32ndNotesPerBeat(): CallableAccessor<number, this>
 	{
-		return this._num32ndNotesPerBeat;
+		return this._num32ndNotesPerBeatAccessor ??= createCallableAccessor(this, () => this._num32ndNotesPerBeat, value => { this.num32ndNotesPerBeat = value; });
 	}
 	
 	// TODO: Not too sure about this. Check spec for valid values

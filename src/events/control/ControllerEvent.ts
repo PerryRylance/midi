@@ -2,6 +2,7 @@ import ReadStream from "../../streams/ReadStream";
 import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
 import ControlEvent, { ControlEventType } from "./ControlEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export enum NamedControllerType
 {
@@ -95,8 +96,10 @@ export default class ControllerEvent<
 	V extends number = number
 > extends ControlEvent
 {
-	controller: ControllerType = ControllerType.BANK_SELECT_COARSE;
-	value: number = 0;
+	private _controller: ControllerType = ControllerType.BANK_SELECT_COARSE;
+	private _value: number = 0;
+	private _controllerAccessor?: CallableAccessor<ControllerType, this>;
+	private _valueAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta?: number, channel?: number, controller: C = ControllerType.BANK_SELECT_COARSE as C, value?: V)
 	{
@@ -106,6 +109,26 @@ export default class ControllerEvent<
 
 		if(value)
 			this.value = value;
+	}
+
+	get controller(): CallableAccessor<ControllerType, this>
+	{
+		return this._controllerAccessor ??= createCallableAccessor(this, () => this._controller, value => { this.controller = value; });
+	}
+
+	set controller(value: ControllerType)
+	{
+		this._controller = value;
+	}
+
+	get value(): CallableAccessor<number, this>
+	{
+		return this._valueAccessor ??= createCallableAccessor(this, () => this._value, value => { this.value = value; });
+	}
+
+	set value(value: number)
+	{
+		this._value = value;
 	}
 
 	readBytes(stream: ReadStream): void

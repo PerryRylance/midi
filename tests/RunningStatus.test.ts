@@ -18,23 +18,23 @@ test("Parse C Major triad with running status", () => {
 	c = EventFactory.fromStream(stream, status, stream.readVLV()) as NoteOnEvent;
 
 	expect(c).toBeInstanceOf(NoteOnEvent);
-	expect(c.channel).toBe(0);
-	expect(c.key).toBe(60);
-	expect(c.velocity).toBe(127);
+	expect(c.channel).toEqualValue(0);
+	expect(c.key).toEqualValue(60);
+	expect(c.velocity).toEqualValue(127);
 
 	e = EventFactory.fromStream(stream, status, stream.readVLV()) as NoteOnEvent;
 
 	expect(e).toBeInstanceOf(NoteOnEvent);
-	expect(e.channel).toBe(0);
-	expect(e.key).toBe(64);
-	expect(e.velocity).toBe(127);
+	expect(e.channel).toEqualValue(0);
+	expect(e.key).toEqualValue(64);
+	expect(e.velocity).toEqualValue(127);
 
 	g = EventFactory.fromStream(stream, status, stream.readVLV()) as NoteOnEvent;
 
 	expect(g).toBeInstanceOf(NoteOnEvent);
-	expect(g.channel).toBe(0);
-	expect(g.key).toBe(67);
-	expect(g.velocity).toBe(127);
+	expect(g.channel).toEqualValue(0);
+	expect(g.key).toEqualValue(67);
+	expect(g.velocity).toEqualValue(127);
 
 });
 

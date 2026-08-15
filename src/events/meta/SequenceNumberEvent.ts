@@ -2,14 +2,16 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class SequenceNumberEvent extends MetaEvent
 {
 	private _number: number = 0;
+	private _numberAccessor?: CallableAccessor<number, this>;
 
-	get number(): number
+	get number(): CallableAccessor<number, this>
 	{
-		return this._number;
+		return this._numberAccessor ??= createCallableAccessor(this, () => this._number, value => { this.number = value; });
 	}
 
 	set number(value: number)

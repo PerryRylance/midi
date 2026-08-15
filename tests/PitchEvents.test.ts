@@ -24,12 +24,12 @@ test("Bend range factory produces expected head", () => {
     const events = PitchBendRangeEventsFactory.create(0, 24);
 
     expect(events[0]).toBeInstanceOf(ControllerEvent);
-    expect(events[0].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_FINE);
-    expect(events[0].value).toBe(0);
+    expect(events[0].controller).toEqualValue(NamedControllerType.REGISTERED_PARAMETER_FINE);
+    expect(events[0].value).toEqualValue(0);
 
     expect(events[1]).toBeInstanceOf(ControllerEvent);
-    expect(events[1].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_COARSE);
-    expect(events[1].value).toBe(0);
+    expect(events[1].controller).toEqualValue(NamedControllerType.REGISTERED_PARAMETER_COARSE);
+    expect(events[1].value).toEqualValue(0);
 
 });
 
@@ -38,12 +38,12 @@ test("Bend range factory produces expected tail", () => {
     const events = PitchBendRangeEventsFactory.create(0, 24);
 
     expect(events[3]).toBeInstanceOf(ControllerEvent);
-    expect(events[3].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_FINE);
-    expect(events[3].value).toBe(0x7F);
+    expect(events[3].controller).toEqualValue(NamedControllerType.REGISTERED_PARAMETER_FINE);
+    expect(events[3].value).toEqualValue(0x7F);
 
     expect(events[4]).toBeInstanceOf(ControllerEvent);
-    expect(events[4].controller).toBe(NamedControllerType.REGISTERED_PARAMETER_COARSE);
-    expect(events[4].value).toBe(0x7F);
+    expect(events[4].controller).toEqualValue(NamedControllerType.REGISTERED_PARAMETER_COARSE);
+    expect(events[4].value).toEqualValue(0x7F);
 
 });
 
@@ -56,8 +56,8 @@ test("Bend range factory produces expected coarse data entry with only semitones
     const data = events[2];
 
     expect(data).toBeInstanceOf(ControllerEvent);
-    expect(data.controller).toBe(NamedControllerType.DATA_ENTRY_COARSE);
-    expect(data.value).toBe(24);
+    expect(data.controller).toEqualValue(NamedControllerType.DATA_ENTRY_COARSE);
+    expect(data.value).toEqualValue(24);
 
 });
 
@@ -71,11 +71,11 @@ test("Bend range factory produces expected fine data entry with cents", () => {
     const fine = events[3];
 
     expect(coarse).toBeInstanceOf(ControllerEvent);
-    expect(coarse.controller).toBe(NamedControllerType.DATA_ENTRY_COARSE);
-    expect(coarse.value).toBe(2);
+    expect(coarse.controller).toEqualValue(NamedControllerType.DATA_ENTRY_COARSE);
+    expect(coarse.value).toEqualValue(2);
 
     expect(fine).toBeInstanceOf(ControllerEvent);
-    expect(fine.controller).toBe(NamedControllerType.DATA_ENTRY_FINE);
-    expect(fine.value).toBe(50);
+    expect(fine.controller).toEqualValue(NamedControllerType.DATA_ENTRY_FINE);
+    expect(fine.value).toEqualValue(50);
 
 });

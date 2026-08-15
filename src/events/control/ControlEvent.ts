@@ -1,6 +1,7 @@
 import { StatusBytes } from "../../streams/StatusBytes";
 import WriteStream from "../../streams/WriteStream";
 import Event, { EventType } from "../Event";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export enum ControlEventType {
 	NOTE_OFF			= 0x80,
@@ -21,6 +22,7 @@ export enum ControlEventType {
 export default abstract class ControlEvent extends Event
 {
 	private _channel: number = 0;
+	private _channelAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta: number = 0, channel: number = 0)
 	{
@@ -31,9 +33,9 @@ export default abstract class ControlEvent extends Event
 
 	protected abstract getTypeHibyte(): number;
 
-	get channel(): number
+	get channel(): CallableAccessor<number, this>
 	{
-		return this._channel;
+		return this._channelAccessor ??= createCallableAccessor(this, () => this._channel, value => { this.channel = value; });
 	}
 
 	set channel(value: number)
@@ -45,17 +47,21 @@ export default abstract class ControlEvent extends Event
 
 	protected writeType(stream: WriteStream, status?: StatusBytes): void
 	{
+		// NB: Uses this._channel (not the public this.channel accessor) throughout - status[]
+		// holds real numbers, and status[1] === this.channel would always be false (comparing
+		// a number against the callable/coercible wrapper object never satisfies strict
+		// equality, coercion or not - see Event.delta's write-up on this exact limitation).
 		const hibyte = this.getTypeHibyte();
 
-		if(status && (status[0] === hibyte && status[1] === this.channel))
+		if(status && (status[0] === hibyte && status[1] === this._channel))
 			return; // NB: Skip, status is the same
 
-		stream.writeByte( hibyte | this.channel );
+		stream.writeByte( hibyte | this._channel );
 
 		if(status)
 		{
 			status[0] = hibyte;
-			status[1] = this.channel;
+			status[1] = this._channel;
 		}
 	}
 

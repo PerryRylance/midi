@@ -2,10 +2,12 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default class PortPrefixEvent extends MetaEvent
 {
 	private _port: number = 0;
+	private _portAccessor?: CallableAccessor<number, this>;
 
 	readBytes(stream: ReadStream): void
 	{
@@ -14,9 +16,9 @@ export default class PortPrefixEvent extends MetaEvent
 		this.port = stream.readByte();
 	}
 
-	get port(): number
+	get port(): CallableAccessor<number, this>
 	{
-		return this._port;
+		return this._portAccessor ??= createCallableAccessor(this, () => this._port, value => { this.port = value; });
 	}
 
 	set port(value: number)

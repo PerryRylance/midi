@@ -1,6 +1,7 @@
 import MetaEvent, { MetaEventType } from "./MetaEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 
 const MICROSECONDS_PER_MINUTE = 60000000.0;
@@ -8,10 +9,11 @@ const MICROSECONDS_PER_MINUTE = 60000000.0;
 export default class SetTempoEvent extends MetaEvent
 {
 	private mspqn: number = 120 * MICROSECONDS_PER_MINUTE;
+	private _bpmAccessor?: CallableAccessor<number, this>;
 
-	get bpm()
+	get bpm(): CallableAccessor<number, this>
 	{
-		return MICROSECONDS_PER_MINUTE / this.mspqn;
+		return this._bpmAccessor ??= createCallableAccessor(this, () => MICROSECONDS_PER_MINUTE / this.mspqn, value => { this.bpm = value; });
 	}
 
 	set bpm(value: number)

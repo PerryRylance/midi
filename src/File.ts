@@ -5,6 +5,7 @@ import WriteStream from "./streams/WriteStream";
 import FileValidator from "./validators/FileValidator";
 import Resolution from "./Resolution";
 import TrackCollection from "./TrackCollection";
+import { CallableArray, createCallableArray, adoptCallableArray } from "./CallableArray";
 
 const MThd = 0x4D546864;
 
@@ -16,25 +17,30 @@ export enum Format {
 
 export default class File
 {
-	private _tracks: TrackCollection = new TrackCollection();
+	private readonly _tracksArray: CallableArray<Track, this, TrackCollection> = createCallableArray<Track, this, TrackCollection>(this, new TrackCollection());
 
 	format: Format = Format.TYPE_1;
 	resolution: Resolution = new Resolution();
 
-	get tracks(): TrackCollection
+	probe()
 	{
-		return this._tracks;
+		debugger;
+
+		return this;
+	}
+
+	get tracks(): CallableArray<Track, this, TrackCollection>
+	{
+		return this._tracksArray;
 	}
 
 	set tracks(value: TrackCollection | Track[])
 	{
-		if (value instanceof TrackCollection) {
-			this._tracks = value;
-		} else {
-			// NB: Mutate the prototype so that the incoming value can still be manipulated, for compatibility reasons. Otherwise old code that sets this to a Track[] will break if the developer continues working on that array - the changes need to be reflected in our TrackCollection.
+		// NB: Mutate the prototype so that the incoming value can still be manipulated, for compatibility reasons. Otherwise old code that sets this to a Track[] will break if the developer continues working on that array - the changes need to be reflected in our TrackCollection.
+		if(!(value instanceof TrackCollection))
 			Object.setPrototypeOf(value, TrackCollection.prototype);
-			this._tracks = value as TrackCollection;
-		}
+
+		adoptCallableArray(this._tracksArray, value as TrackCollection);
 	}
 
 	static fromArrayBuffer(data: ArrayBuffer): File
@@ -123,5 +129,14 @@ export default class File
 
 			track.writeBytes(stream);
 		}
+	}
+
+	toArrayBuffer(): ArrayBuffer
+	{
+		const stream = new WriteStream();
+
+		this.writeBytes(stream);
+
+		return stream.toArrayBuffer();
 	}
 }

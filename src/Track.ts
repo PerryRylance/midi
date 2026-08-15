@@ -8,12 +8,30 @@ import EndOfTrackEvent from "./events/meta/EndOfTrackEvent";
 import ControlEvent from "./events/control/ControlEvent";
 import UnsupportedTrackError from "./exceptions/UnsupportedTrackError";
 import TrackValidator from "./validators/TrackValidator";
+import { CallableArray, createCallableArray, adoptCallableArray } from "./CallableArray";
 
 const MTrk		= 0x4D54726B;
 
 export default class Track
 {
-	events: Event[] = [];
+	private readonly _eventsArray: CallableArray<Event, this> = createCallableArray<Event, this>(this);
+
+	probe()
+	{
+		debugger;
+
+		return this;
+	}
+
+	get events(): CallableArray<Event, this>
+	{
+		return this._eventsArray;
+	}
+
+	set events(value: Event[])
+	{
+		adoptCallableArray(this._eventsArray, value);
+	}
 
 	readBytes(stream: ReadStream)
 	{

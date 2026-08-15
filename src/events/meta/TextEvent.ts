@@ -2,14 +2,16 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
+import { CallableAccessor, createCallableStringAccessor } from "../../CallableProperty";
 
 export default class TextEvent extends MetaEvent
 {
 	private _text: string = "";
+	private _textAccessor?: CallableAccessor<string, this>;
 
-	get text(): string
+	get text(): CallableAccessor<string, this>
 	{
-		return this._text;
+		return this._textAccessor ??= createCallableStringAccessor(this, () => this._text, value => { this.text = value; });
 	}
 
 	set text(value: string)

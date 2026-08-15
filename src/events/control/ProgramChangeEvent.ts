@@ -2,6 +2,7 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import ControlEvent, { ControlEventType } from "./ControlEvent";
 import { StatusBytes } from "../../streams/StatusBytes";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export enum ProgramType
 {
@@ -137,7 +138,18 @@ export enum ProgramType
 
 export default class ProgramChangeEvent extends ControlEvent
 {
-	program: ProgramType = ProgramType.ACOUSTIC_GRAND_PIANO;
+	private _program: ProgramType = ProgramType.ACOUSTIC_GRAND_PIANO;
+	private _programAccessor?: CallableAccessor<ProgramType, this>;
+
+	get program(): CallableAccessor<ProgramType, this>
+	{
+		return this._programAccessor ??= createCallableAccessor(this, () => this._program, value => { this.program = value; });
+	}
+
+	set program(value: ProgramType)
+	{
+		this._program = value;
+	}
 
 	readBytes(stream: ReadStream): void
 	{

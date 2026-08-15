@@ -2,6 +2,7 @@ import DeviceManufacturer from "../../DeviceManufacturer";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import Event, { EventType } from "../Event";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export enum UniversalDevices {
 	NON_REAL_TIME	= 0x7E,
@@ -12,8 +13,19 @@ type SysExManufacturer = DeviceManufacturer | UniversalDevices;
 
 export default class SysExEvent extends Event
 {
-	manufacturer: SysExManufacturer = DeviceManufacturer.AKAI;
+	private _manufacturer: SysExManufacturer = DeviceManufacturer.AKAI;
+	private _manufacturerAccessor?: CallableAccessor<SysExManufacturer, this>;
 	bytes: Uint8Array = new Uint8Array(); // NB: Payload not including 0xF7 terminator
+
+	get manufacturer(): CallableAccessor<SysExManufacturer, this>
+	{
+		return this._manufacturerAccessor ??= createCallableAccessor(this, () => this._manufacturer, value => { this.manufacturer = value; });
+	}
+
+	set manufacturer(value: SysExManufacturer)
+	{
+		this._manufacturer = value;
+	}
 
 	readBytes(stream: ReadStream): void
 	{

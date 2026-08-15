@@ -2,6 +2,7 @@ import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 
 import MetaEvent, { MetaEventType } from "./MetaEvent";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export enum Quality
 {
@@ -11,9 +12,20 @@ export enum Quality
 
 export default class KeySignatureEvent extends MetaEvent
 {
-	// TODO: Getters and setters for all these
 	private _accidentals: number = 0;
-	quality: Quality = Quality.MAJOR;
+	private _accidentalsAccessor?: CallableAccessor<number, this>;
+	private _quality: Quality = Quality.MAJOR;
+	private _qualityAccessor?: CallableAccessor<Quality, this>;
+
+	get quality(): CallableAccessor<Quality, this>
+	{
+		return this._qualityAccessor ??= createCallableAccessor(this, () => this._quality, value => { this.quality = value; });
+	}
+
+	set quality(value: Quality)
+	{
+		this._quality = value;
+	}
 
 	readBytes(stream: ReadStream): void
 	{
@@ -38,9 +50,9 @@ export default class KeySignatureEvent extends MetaEvent
 		return MetaEventType.KEY_SIGNATURE;
 	}
 
-	get accidentals(): number
+	get accidentals(): CallableAccessor<number, this>
 	{
-		return this._accidentals;
+		return this._accidentalsAccessor ??= createCallableAccessor(this, () => this._accidentals, value => { this.accidentals = value; });
 	}
 
 	set accidentals(value: number)

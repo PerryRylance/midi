@@ -288,15 +288,15 @@ test("Serialize pitch wheel event", () => {
 
 	event.amount = -1;
 
-	expect(event.value).toBe(0x0);
+	expect(event.value).toEqualValue(0x0);
 
 	event.amount = 0;
 
-	expect(event.value).toBe(0x2000);
+	expect(event.value).toEqualValue(0x2000);
 
 	event.amount = 1;
 
-	expect(event.value).toBe(0x3FFF);
+	expect(event.value).toEqualValue(0x3FFF);
 
 });
 

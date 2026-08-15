@@ -13,7 +13,11 @@ export default class WriteStream extends Stream
 
 	writeByte(value: number)
 	{
-		this.buffer[this.position] = value;
+		// NB: Number(value) rather than a bare assignment - value may be a callable/coercible
+		// accessor (e.g. event.channel) rather than a true number primitive. Bitwise/arithmetic
+		// ops elsewhere coerce implicitly, but a plain assignment into this.buffer (a plain
+		// number[], not a typed array) does not, so we coerce explicitly at this choke point.
+		this.buffer[this.position] = Number(value);
 		this.position++;
 	}
 
@@ -22,7 +26,9 @@ export default class WriteStream extends Stream
 		if(value < -128 || value > 127)
 			throw new RangeError("Signed byte out of range");
 
-		this.buffer[this.position] = value < 0 ? 0xFF + value : value;
+		const normalized = Number(value);
+
+		this.buffer[this.position] = normalized < 0 ? 0xFF + normalized : normalized;
 		this.position++;
 	}
 
@@ -85,7 +91,7 @@ export default class WriteStream extends Stream
 		return buffer;
 	}
 
-	toDataURL(): string
+	toDataUrl(): string
 	{
 		const buffer = this.toArrayBuffer();
 		const bytes = new Uint8Array(buffer);
@@ -99,5 +105,13 @@ export default class WriteStream extends Stream
 		const b64 = btoa(binary);
 
 		return `data:audio/midi;base64,${b64}`;
+	}
+
+	/**
+	 * @deprecated Use toDataUrl
+	 */
+	toDataURL(): string
+	{
+		return this.toDataUrl();
 	}
 }

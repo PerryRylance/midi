@@ -2,11 +2,14 @@ import ControlEvent from "./ControlEvent";
 import ReadStream from "../../streams/ReadStream";
 import WriteStream from "../../streams/WriteStream";
 import { StatusBytes } from "../../streams/StatusBytes";
+import { CallableAccessor, createCallableAccessor } from "../../CallableProperty";
 
 export default abstract class NoteEvent extends ControlEvent
 {
 	private _key: number = 60;
 	private _velocity: number = 127;
+	private _keyAccessor?: CallableAccessor<number, this>;
+	private _velocityAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta?: number, channel?: number, key: number = 60, velocity: number = 127)
 	{
@@ -16,9 +19,9 @@ export default abstract class NoteEvent extends ControlEvent
 		this.velocity = velocity;
 	}
 
-	get key(): number
+	get key(): CallableAccessor<number, this>
 	{
-		return this._key;
+		return this._keyAccessor ??= createCallableAccessor(this, () => this._key, value => { this.key = value; });
 	}
 
 	set key(value: number)
@@ -28,9 +31,9 @@ export default abstract class NoteEvent extends ControlEvent
 		this._key = value;
 	}
 
-	get velocity(): number
+	get velocity(): CallableAccessor<number, this>
 	{
-		return this._velocity;
+		return this._velocityAccessor ??= createCallableAccessor(this, () => this._velocity, value => { this.velocity = value; });
 	}
 
 	set velocity(value: number)

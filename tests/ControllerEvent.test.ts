@@ -6,7 +6,7 @@ test("Can assign undefined CC types", () => {
     
     event.controller = 0x59;
 
-    expect(event.controller).toBe(0x59);
+    expect(event.controller).toEqualValue(0x59);
 
 });
 
@@ -21,12 +21,12 @@ test("Cannot assign out of range CC type", () => {
 
 test("Can assign type via contructor", () => {
 
-    expect(new ControllerEvent(0, 0, ControllerType.HOLD_PEDAL_1).controller).toBe(ControllerType.HOLD_PEDAL_1);
+    expect(new ControllerEvent(0, 0, ControllerType.HOLD_PEDAL_1).controller).toEqualValue(ControllerType.HOLD_PEDAL_1);
 
 });
 
 test("Can assign value via constructor", () => {
 
-    expect(new ControllerEvent(0, 0, ControllerType.BANK_SELECT_COARSE, 123).value).toBe(123);
+    expect(new ControllerEvent(0, 0, ControllerType.BANK_SELECT_COARSE, 123).value).toEqualValue(123);
 
 });
