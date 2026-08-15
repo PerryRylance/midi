@@ -45,9 +45,9 @@ test("Flatten adjusts delta", () => {
 
     const events = collection[0].events;
 
-    expect(events[0].delta).toBe(0);
-    expect(events[1].delta).toBe(50);
-    expect(events[2].delta).toBe(350);
+    expect(events[0].delta).toEqualValue(0);
+    expect(events[1].delta).toEqualValue(50);
+    expect(events[2].delta).toEqualValue(350);
 
 });
 
@@ -65,9 +65,9 @@ test("Flatten is stable", () => {
     expect(events[1]).toBeInstanceOf(NoteOffEvent);
     expect(events[2]).toBeInstanceOf(ControllerEvent);
 
-    expect(events[0].delta).toBe(0);
-    expect(events[1].delta).toBe(50);
-    expect(events[2].delta).toBe(0);
+    expect(events[0].delta).toEqualValue(0);
+    expect(events[1].delta).toEqualValue(50);
+    expect(events[2].delta).toEqualValue(0);
 
 });
 

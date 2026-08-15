@@ -1,6 +1,7 @@
 import ReadStream from "../streams/ReadStream";
 import { StatusBytes } from "../streams/StatusBytes";
 import WriteStream from "../streams/WriteStream";
+import { CallableAccessor, createCallableAccessor } from "../CallableProperty";
 
 export enum EventType {
 	CONTROL = 0,
@@ -11,6 +12,7 @@ export enum EventType {
 export default abstract class Event
 {
 	private _delta: number = 0;
+	private _deltaAccessor?: CallableAccessor<number, this>;
 
 	constructor(delta: number = 0)
 	{
@@ -20,9 +22,14 @@ export default abstract class Event
 	abstract readBytes(stream: ReadStream): void;
 	protected abstract writeType(stream: WriteStream, status?: StatusBytes): void;
 
-	get delta(): number
+	// NB: delta remains a real get/set accessor for compatibility (plain reads coerce via
+	// valueOf/Symbol.toPrimitive, e.g. in arithmetic; `event.delta = x` still works exactly
+	// as before via the setter below). It's also callable - event.delta(321) sets delta and
+	// returns the event for chaining. The callable is memoized per instance so it's created
+	// at most once per event, not once per access.
+	get delta(): CallableAccessor<number, this>
 	{
-		return this._delta;
+		return this._deltaAccessor ??= createCallableAccessor(this, () => this._delta, value => { this.delta = value; });
 	}
 
 	set delta(value: number)
