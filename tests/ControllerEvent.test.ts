@@ -19,6 +19,12 @@ test("Cannot assign out of range CC type", () => {
 
 });
 
+test("Cannot assign out of range CC value", () => {
+
+    expect(() => new ControllerEvent().value = 0x80).toThrow(RangeError);
+
+});
+
 test("Can assign type via contructor", () => {
 
     expect(new ControllerEvent(0, 0, ControllerType.HOLD_PEDAL_1).controller).toEqualValue(ControllerType.HOLD_PEDAL_1);

@@ -111,6 +111,11 @@ export default class ControllerEvent<
 			this.value = value;
 	}
 
+	private assertValidControllerValue(value: number)
+	{
+		this.assertUnsignedAndBelow(value, 0x7F);
+	}
+
 	get controller(): CallableAccessor<ControllerType, this>
 	{
 		return this._controllerAccessor ??= createCallableAccessor(this, () => this._controller, value => { this.controller = value; });
@@ -128,6 +133,8 @@ export default class ControllerEvent<
 
 	set value(value: number)
 	{
+		this.assertValidControllerValue(value);
+
 		this._value = value;
 	}
 

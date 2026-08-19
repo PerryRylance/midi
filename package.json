@@ -3,7 +3,7 @@
   "author": "Perry Rylance",
   "license": "MIT",
   "description": "TypeScript library for parsing, building, serializing and debugging MIDI.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "private": false,
