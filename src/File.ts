@@ -1,5 +1,5 @@
 import ReadStream from "./streams/ReadStream";
-import Track from "./Track";
+import Track, { WriteOptions } from "./Track";
 import ParseError from "./exceptions/ParseError";
 import WriteStream from "./streams/WriteStream";
 import FileValidator from "./validators/FileValidator";
@@ -7,6 +7,7 @@ import Resolution from "./Resolution";
 import TrackCollection from "./TrackCollection";
 import { CallableArray, createCallableArray, adoptCallableArray } from "./CallableArray";
 import Probeable from "./Probeable";
+import EndOfTrackEvent from "./events/meta/EndOfTrackEvent";
 
 const MThd = 0x4D546864;
 
@@ -101,7 +102,7 @@ export default class File extends Probeable
 			throw new ParseError(stream, "Unexpected data after parsing file");
 	}
 
-	writeBytes(stream: WriteStream)
+	writeBytes(stream: WriteStream, trackWriteOptions: WriteOptions = { autoEndOfTrackEvents: true })
 	{
 		const validator = new FileValidator(this);
 
@@ -118,6 +119,9 @@ export default class File extends Probeable
 		for(let i = 0; i < this.tracks.length; i++)
 		{
 			const track = this.tracks[i];
+
+			if(trackWriteOptions.autoEndOfTrackEvents)
+				track.fixEndOfTrack();
 
 			validator.validateTrack(track, i);
 

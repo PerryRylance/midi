@@ -13,6 +13,11 @@ import Probeable from "./Probeable";
 
 const MTrk		= 0x4D54726B;
 
+export type WriteOptions = {
+	// NB: Removes any existing end of track events and appends one to the end, preserving delta. This will mutate the track's events.
+	autoEndOfTrackEvents?: boolean;
+};
+
 export default class Track extends Probeable
 {
 	private readonly _eventsArray: CallableArray<Event, this> = createCallableArray<Event, this>(this);
@@ -103,5 +108,37 @@ export default class Track extends Probeable
 		stream.writeUint(chunkSize);
 
 		stream.seekTo(trackEndPosition);
+	}
+
+	fixEndOfTrack(): this
+	{
+		const events = this.events;
+		let accumulatedDelta = 0;
+
+		// NB: First, pass the delta of any stray end of track events on to the next non-end of track event
+		for(let i = 0; i < events.length; i++)
+		{
+			const event = events[i];
+
+			if(event instanceof EndOfTrackEvent)
+			{
+				accumulatedDelta += event.delta;
+				continue;
+			}
+
+			event.delta += accumulatedDelta;
+			accumulatedDelta = 0;
+		}
+
+		// NB: Now strip out all end of track events
+		const filtered = events.filter(event => !(event instanceof EndOfTrackEvent));
+
+		// NB: If the accumulated delta is non-zero it's accumulated from the old final end of track event, put it back
+		filtered.push(new EndOfTrackEvent(accumulatedDelta));
+
+		// NB: Update the tracks events
+		this.events(filtered);
+
+		return this;
 	}
 }
