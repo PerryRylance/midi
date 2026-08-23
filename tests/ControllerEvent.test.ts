@@ -36,3 +36,9 @@ test("Can assign value via constructor", () => {
     expect(new ControllerEvent(0, 0, ControllerType.BANK_SELECT_COARSE, 123).value).toEqualValue(123);
 
 });
+
+test("Cannot assign a floating point value", () => {
+
+    expect(() => new ControllerEvent(0, 0, ControllerType.BANK_SELECT_COARSE, 1.23).value).toThrow(Error);
+
+});
