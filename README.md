@@ -29,6 +29,13 @@ For more advanced usage, see the fluent documentation below.
 - You can use `toArrayBuffer` from the `WriteStream` then do whatever you need
 - `toDataUrl` is also provided for convenience
 
+#### Automatic end of track handling
+Most MIDI players and parsers expect each track to end with an "end of track" event.
+
+By default, when writing, `File` will call `fixEndOfTrack` on each track before writing. This strips out any existing `EndOfTrackEvent`s and adds one on the end, preserving delta.
+
+If you need to disable this behaviour, you can pass `{ autoEndOfTrackEvents: false }` to `writeBytes`.
+
 ## Version overview
 
 ### 1.2.*
