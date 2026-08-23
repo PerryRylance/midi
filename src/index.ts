@@ -1,6 +1,7 @@
 import DeviceManufacturer from "./DeviceManufacturer";
 import File from "./File";
 import Track from "./Track";
+import TrackCollection from "./TrackCollection";
 import Event from "./events/Event";
 import AftertouchEvent from "./events/control/AftertouchEvent";
 import ChannelAftertouchEvent from "./events/control/ChannelAftertouchEvent";
@@ -55,6 +56,7 @@ export {
 	DeviceManufacturer,
 	File,
 	Track,
+	TrackCollection,
 	Event,
 	AftertouchEvent,
 	ChannelAftertouchEvent,
